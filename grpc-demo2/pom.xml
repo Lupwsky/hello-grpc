@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>grpc-demo2</artifactId>
+    <name>grpc-demo2 Maven Webapp</name>
+    <url>http://www.example.com</url>
+    <packaging>jar</packaging>
+    <version>1.0</version>
+
+
+    <parent>
+        <artifactId>hello-grpc</artifactId>
+        <groupId>com.lupw</groupId>
+        <version>1.0</version>
+    </parent>
+
+    <properties>
+        <spring.boot.grpc.client.version>1.4.0.RELEASE</spring.boot.grpc.client.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.lupw</groupId>
+            <artifactId>grpc-proto</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.devh</groupId>
+            <artifactId>grpc-client-spring-boot-starter</artifactId>
+            <version>${spring.boot.grpc.client.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>grpc-demo2</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
