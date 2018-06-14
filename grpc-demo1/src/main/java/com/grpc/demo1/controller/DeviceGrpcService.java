@@ -14,6 +14,7 @@ public class DeviceGrpcService extends DeviceFixServiceGrpc.DeviceFixServiceImpl
     @Override
     public void insertDeviceFix(DeviceFix request, StreamObserver<BooleanReply> responseObserver) {
         System.out.println("insertDeviceFix");
+
     }
 
     @Override
