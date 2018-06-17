@@ -1,4 +1,4 @@
-package com.grpc.demo1.controller;
+package com.grpc.server.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

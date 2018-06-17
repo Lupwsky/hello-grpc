@@ -1,4 +1,4 @@
-package com.grpc.demo1.controller;
+package com.grpc.server.controller;
 
 
 import com.hello.grpc.proto.BooleanReply;

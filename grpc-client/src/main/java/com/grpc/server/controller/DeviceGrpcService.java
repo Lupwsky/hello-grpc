@@ -1,7 +1,6 @@
-package com.grpc.demo2.controller;
+package com.grpc.server.controller;
 
 import com.hello.grpc.proto.BooleanReply;
-import com.hello.grpc.proto.DeviceFix;
 import com.hello.grpc.proto.DeviceFixServiceGrpc;
 import io.grpc.Channel;
 import net.devh.springboot.autoconfigure.grpc.client.GrpcClient;

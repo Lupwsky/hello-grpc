@@ -1,6 +1,5 @@
-package com.grpc.demo2.controller;
+package com.grpc.server.controller;
 
-import com.hello.grpc.proto.DeviceFixServiceGrpc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
