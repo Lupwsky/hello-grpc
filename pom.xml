@@ -13,8 +13,8 @@
 
     <!-- modules -->
     <modules>
-        <module>grpc-demo1</module>
-        <module>grpc-demo2</module>
+        <module>grpc-client</module>
+        <module>grpc-server</module>
         <module>grpc-proto</module>
     </modules>
 
