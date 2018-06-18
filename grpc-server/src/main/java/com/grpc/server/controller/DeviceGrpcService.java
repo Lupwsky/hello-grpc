@@ -1,34 +1,20 @@
 package com.grpc.server.controller;
 
 
-import com.hello.grpc.proto.BooleanReply;
-import com.hello.grpc.proto.ConditionsRequest;
-import com.hello.grpc.proto.DeviceFix;
-import com.hello.grpc.proto.DeviceFixServiceGrpc;
+import com.hello.grpc.proto.Request;
+import com.hello.grpc.proto.Response;
+import com.hello.grpc.proto.TestServiceGrpc;
 import io.grpc.stub.StreamObserver;
 import net.devh.springboot.autoconfigure.grpc.server.GrpcService;
 
-@GrpcService(DeviceFixServiceGrpc.class)
-public class DeviceGrpcService extends DeviceFixServiceGrpc.DeviceFixServiceImplBase {
+@GrpcService(TestServiceGrpc.class)
+public class DeviceGrpcService extends TestServiceGrpc.TestServiceImplBase {
 
+    // 实现 gRPC 的 test 方法
     @Override
-    public void insertDeviceFix(DeviceFix request, StreamObserver<BooleanReply> responseObserver) {
-        System.out.println("insertDeviceFix");
-
-    }
-
-    @Override
-    public void updateDeviceFix(DeviceFix request, StreamObserver<BooleanReply> responseObserver) {
-        System.out.println("updateDeviceFix");
-    }
-
-    @Override
-    public void searchDeviceFix(ConditionsRequest request, StreamObserver<DeviceFix> responseObserver) {
-        System.out.println("searchDeviceFix");
-    }
-
-    @Override
-    public void deleteDeviceFix(ConditionsRequest request, StreamObserver<BooleanReply> responseObserver) {
-        System.out.println("deleteDeviceFix");
+    public void test(Request request, StreamObserver<Response> responseObserver) {
+        int id = request.getId();
+        responseObserver.onNext(Response.newBuilder().setId(id).setName("test").build());
+        responseObserver.onCompleted();
     }
 }

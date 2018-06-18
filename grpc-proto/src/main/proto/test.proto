@@ -2,38 +2,20 @@ syntax = "proto3";
 
 option java_multiple_files = true;
 option java_package = "com.hello.grpc.proto";
-option java_outer_classname = "DeviceFixServiceProto";
+option java_outer_classname = "TestServiceProto";
 
-
-// The device service definition.
-service DeviceFixService {
-    // Sends a message
-    rpc insertDeviceFix (DeviceFix) returns (BooleanReply){}
-    rpc updateDeviceFix (DeviceFix) returns (BooleanReply){}
-    rpc searchDeviceFix (ConditionsRequest) returns (DeviceFix){}
-    rpc deleteDeviceFix (ConditionsRequest) returns (BooleanReply){}
+// 定义的 RPC 接口
+service TestService {
+    // 可被调用的方法
+    rpc test (Request) returns (Response){}
 }
 
-
-// The request message .
-message ConditionsRequest {
-    string id = 1;
+message Request {
+    int32 id = 1;
 }
 
-
-// The response message
-message BooleanReply {
-    bool reply = 1;
+message Response {
+    int32 id = 1;
+    string name = 2;
 }
 
-
-message DeviceFix {
-    string id=1;
-    string serialNum=2;
-    string userNum=3;
-    int32  status=4;
-    int32  type=5;
-    string address=6;
-    string createtime=7;
-    string updatetime=8;
-}
