@@ -13,8 +13,6 @@ import io.grpc.*;
  */
 public class GrpcServerInterceptor implements ServerInterceptor {
 
-    private final static Metadata.Key<String> TEST = Metadata.Key.of("test", Metadata.ASCII_STRING_MARSHALLER);
-
     @Override
     public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> serverCall,
                                                                  Metadata metadata,
@@ -24,6 +22,7 @@ public class GrpcServerInterceptor implements ServerInterceptor {
         return serverCallHandler.startCall(new ForwardingServerCall.SimpleForwardingServerCall<ReqT, RespT>(serverCall) {
             @Override
             public void sendHeaders(Metadata headers) {
+                Metadata.Key<String> TEST = Metadata.Key.of("test", Metadata.ASCII_STRING_MARSHALLER);
                 headers.put(TEST, "TEST");
                 super.sendHeaders(headers);
             }
@@ -31,6 +30,9 @@ public class GrpcServerInterceptor implements ServerInterceptor {
             @Override
             public void sendMessage(RespT message) {
                 Response response = (Response) message;
+                System.out.println("" + response);
+                System.out.println("" + message);
+
                 if (response.getName().equals("test")) {
                     response.newBuilderForType().setName("TEST").build();
                 }
