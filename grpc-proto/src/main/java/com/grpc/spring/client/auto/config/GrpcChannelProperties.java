@@ -1,11 +1,14 @@
-package com.grpc.spring;
-
-import lombok.Data;
+package com.grpc.spring.client.auto.config;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Data;
 
+/**
+ * @author cruzczhang
+ *
+ */
 @Data
 public class GrpcChannelProperties {
 
@@ -33,8 +36,14 @@ public class GrpcChannelProperties {
 
     private boolean enableKeepAlive = false;
 
+    /**
+     * The default delay in seconds before we send a keepalive.
+     */
     private long keepAliveDelay = 60;
 
+    /**
+     * The default timeout in seconds for a keepalive ping request.
+     */
     private long keepAliveTimeout = 120;
     
     private String serviceId;

@@ -1,6 +1,6 @@
 package com.grpc.spring.server.auto.config;
 
-import com.grpc.spring.server.auto.config.annotation.GrpcGlobalInterceptor;
+import com.grpc.spring.GrpcGlobalInterceptor;
 import com.grpc.spring.server.auto.config.annotation.GrpcService;
 import io.grpc.*;
 import lombok.extern.slf4j.Slf4j;

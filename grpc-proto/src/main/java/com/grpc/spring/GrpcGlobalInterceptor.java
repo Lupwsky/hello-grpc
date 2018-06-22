@@ -1,4 +1,4 @@
-package com.grpc.spring.server.auto.config.annotation;
+package com.grpc.spring;
 
 import org.springframework.stereotype.Component;
 
