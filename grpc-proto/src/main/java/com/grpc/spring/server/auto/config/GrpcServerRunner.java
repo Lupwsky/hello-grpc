@@ -1,5 +1,7 @@
-package com.grpc.spring;
+package com.grpc.spring.server.auto.config;
 
+import com.grpc.spring.server.auto.config.annotation.GrpcGlobalInterceptor;
+import com.grpc.spring.server.auto.config.annotation.GrpcService;
 import io.grpc.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanCreationException;
@@ -22,17 +24,17 @@ import java.util.stream.Stream;
 
 @Slf4j
 @Configuration
-public class GRpcServerRunner implements CommandLineRunner,DisposableBean  {
+public class GrpcServerRunner implements CommandLineRunner,DisposableBean  {
 
     private final AbstractApplicationContext applicationContext;
 
-    private final GRpcServerProperties gRpcServerProperties;
+    private final GrpcServerProperties gRpcServerProperties;
 
     private Server server;
 
 
     @Autowired
-    public GRpcServerRunner(AbstractApplicationContext applicationContext, GRpcServerProperties gRpcServerProperties) {
+    public GrpcServerRunner(AbstractApplicationContext applicationContext, GrpcServerProperties gRpcServerProperties) {
         this.applicationContext = applicationContext;
         this.gRpcServerProperties = gRpcServerProperties;
     }
@@ -43,18 +45,18 @@ public class GRpcServerRunner implements CommandLineRunner,DisposableBean  {
         log.info("Starting gRPC Server ...");
 
         Collection<ServerInterceptor> globalInterceptors =
-                getBeanNamesByTypeWithAnnotation(GRpcGlobalInterceptor.class,ServerInterceptor.class)
+                getBeanNamesByTypeWithAnnotation(GrpcGlobalInterceptor.class,ServerInterceptor.class)
                         .map(name -> applicationContext.getBeanFactory().getBean(name,ServerInterceptor.class))
                         .collect(Collectors.toList());
 
         final ServerBuilder<?> serverBuilder = ServerBuilder.forPort(gRpcServerProperties.getPort());
 
-        getBeanNamesByTypeWithAnnotation(GRpcService.class,BindableService.class)
+        getBeanNamesByTypeWithAnnotation(GrpcService.class,BindableService.class)
                 .forEach(name->{
                     BindableService srv = applicationContext.getBeanFactory().getBean(name, BindableService.class);
                     ServerServiceDefinition serviceDefinition = srv.bindService();
-                    GRpcService gRpcServiceAnn = applicationContext.findAnnotationOnBean(name,GRpcService.class);
-                    serviceDefinition  = bindInterceptors(serviceDefinition,gRpcServiceAnn,globalInterceptors);
+                    GrpcService grpcServiceAnn = applicationContext.findAnnotationOnBean(name,GrpcService.class);
+                    serviceDefinition  = bindInterceptors(serviceDefinition,grpcServiceAnn,globalInterceptors);
                     serverBuilder.addService(serviceDefinition);
                     log.info("{} has been registered.", serviceDefinition.getServiceDescriptor().getName());
 
@@ -75,7 +77,7 @@ public class GRpcServerRunner implements CommandLineRunner,DisposableBean  {
 
 
     private ServerServiceDefinition bindInterceptors(ServerServiceDefinition serviceDefinition,
-                                                     GRpcService gRpcService,
+                                                     GrpcService gRpcService,
                                                      Collection<ServerInterceptor> globalInterceptors) {
         Stream<? extends ServerInterceptor> privateInterceptors = Stream.of(gRpcService.interceptors())
                 .map(interceptorClass -> {
@@ -102,7 +104,7 @@ public class GRpcServerRunner implements CommandLineRunner,DisposableBean  {
             @Override
             public void run() {
                 try {
-                    GRpcServerRunner.this.server.awaitTermination();
+                    GrpcServerRunner.this.server.awaitTermination();
                 } catch (InterruptedException e) {
                     log.error("gRPC server stopped.",e);
                 }

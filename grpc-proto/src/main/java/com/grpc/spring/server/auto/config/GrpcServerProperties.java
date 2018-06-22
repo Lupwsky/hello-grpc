@@ -1,4 +1,4 @@
-package com.grpc.spring;
+package com.grpc.spring.server.auto.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -12,6 +12,6 @@ import org.springframework.context.annotation.PropertySource;
 // 属性值匹配的前缀
 @ConfigurationProperties(prefix="grpc.server")
 @Data
-public class GRpcServerProperties {
+public class GrpcServerProperties {
     private int port;
 }

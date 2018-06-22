@@ -1,4 +1,4 @@
-package com.grpc.spring;
+package com.grpc.spring.server.auto.config.annotation;
 
 import org.springframework.stereotype.Component;
 
@@ -9,5 +9,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Component
-public @interface GRpcGlobalInterceptor {
+public @interface GrpcGlobalInterceptor {
 }
