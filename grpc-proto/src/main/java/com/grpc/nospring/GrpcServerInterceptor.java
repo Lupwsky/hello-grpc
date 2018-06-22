@@ -30,13 +30,11 @@ public class GrpcServerInterceptor implements ServerInterceptor {
             @Override
             public void sendMessage(RespT message) {
                 Response response = (Response) message;
-                System.out.println("" + response);
-                System.out.println("" + message);
 
                 if (response.getName().equals("test")) {
                     response.newBuilderForType().setName("TEST").build();
                 }
-                System.out.println(message.toString());
+
                 super.sendMessage(message);
             }
         }, metadata);

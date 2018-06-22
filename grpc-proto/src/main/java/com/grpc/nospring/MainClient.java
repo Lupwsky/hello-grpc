@@ -1,3 +1,5 @@
+package com.grpc.nospring;
+
 import com.alibaba.fastjson.JSON;
 import com.hello.grpc.proto.Request;
 import com.hello.grpc.proto.Response;
