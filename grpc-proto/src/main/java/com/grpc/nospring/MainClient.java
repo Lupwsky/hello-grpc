@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class MainClient {
     public static void main(String[] args) {
-        ManagedChannel channel = ManagedChannelBuilder.forAddress("127.0.0.1", 8000)
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("127.0.0.1", 6000)
                 .usePlaintext(true)
                 .keepAliveWithoutCalls(true)
                 .keepAliveTimeout(120, TimeUnit.SECONDS)

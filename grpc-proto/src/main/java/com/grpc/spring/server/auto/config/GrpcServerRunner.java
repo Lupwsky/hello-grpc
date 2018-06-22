@@ -9,6 +9,7 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.type.StandardMethodMetadata;
@@ -24,6 +25,7 @@ import java.util.stream.Stream;
 
 @Slf4j
 @Configuration
+@EnableConfigurationProperties(value = {GrpcServerProperties.class})
 public class GrpcServerRunner implements CommandLineRunner,DisposableBean  {
 
     private final AbstractApplicationContext applicationContext;
