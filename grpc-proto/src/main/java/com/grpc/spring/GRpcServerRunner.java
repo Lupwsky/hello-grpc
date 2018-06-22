@@ -7,6 +7,7 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.type.StandardMethodMetadata;
 
@@ -18,41 +19,36 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * @author cruzczhang
- *
- */
+
 @Slf4j
+@Configuration
 public class GRpcServerRunner implements CommandLineRunner,DisposableBean  {
 
+    private final AbstractApplicationContext applicationContext;
 
-
-    @Autowired
-    private AbstractApplicationContext applicationContext;
-
-    @Autowired
-    private GRpcServerProperties gRpcServerProperties;
-
-
-    private GRpcServerBuilderConfigurer configurer;
+    private final GRpcServerProperties gRpcServerProperties;
 
     private Server server;
 
-    public GRpcServerRunner(GRpcServerBuilderConfigurer configurer) {
-        this.configurer = configurer;
+
+    @Autowired
+    public GRpcServerRunner(AbstractApplicationContext applicationContext, GRpcServerProperties gRpcServerProperties) {
+        this.applicationContext = applicationContext;
+        this.gRpcServerProperties = gRpcServerProperties;
     }
+
 
     @Override
     public void run(String... args) throws Exception {
         log.info("Starting gRPC Server ...");
 
-        Collection<ServerInterceptor> globalInterceptors = getBeanNamesByTypeWithAnnotation(GRpcGlobalInterceptor.class,ServerInterceptor.class)
-                .map(name -> applicationContext.getBeanFactory().getBean(name,ServerInterceptor.class))
-                .collect(Collectors.toList());
+        Collection<ServerInterceptor> globalInterceptors =
+                getBeanNamesByTypeWithAnnotation(GRpcGlobalInterceptor.class,ServerInterceptor.class)
+                        .map(name -> applicationContext.getBeanFactory().getBean(name,ServerInterceptor.class))
+                        .collect(Collectors.toList());
 
         final ServerBuilder<?> serverBuilder = ServerBuilder.forPort(gRpcServerProperties.getPort());
 
-        // find and register all GRpcService-enabled beans
         getBeanNamesByTypeWithAnnotation(GRpcService.class,BindableService.class)
                 .forEach(name->{
                     BindableService srv = applicationContext.getBeanFactory().getBean(name, BindableService.class);
@@ -64,16 +60,23 @@ public class GRpcServerRunner implements CommandLineRunner,DisposableBean  {
 
                 });
 
-        configurer.configure(serverBuilder);
         server = serverBuilder.build().start();
         log.info("gRPC Server started, listening on port {}.", gRpcServerProperties.getPort());
         startDaemonAwaitThread();
-
     }
 
-    private ServerServiceDefinition bindInterceptors(ServerServiceDefinition serviceDefinition, GRpcService gRpcService, Collection<ServerInterceptor> globalInterceptors) {
+
+    @Override
+    public void destroy() throws Exception {
+        log.info("Shutting down gRPC server ...");
+        Optional.ofNullable(server).ifPresent(Server::shutdown);
+        log.info("gRPC server stopped.");
+    }
 
 
+    private ServerServiceDefinition bindInterceptors(ServerServiceDefinition serviceDefinition,
+                                                     GRpcService gRpcService,
+                                                     Collection<ServerInterceptor> globalInterceptors) {
         Stream<? extends ServerInterceptor> privateInterceptors = Stream.of(gRpcService.interceptors())
                 .map(interceptorClass -> {
                     try {
@@ -94,7 +97,6 @@ public class GRpcServerRunner implements CommandLineRunner,DisposableBean  {
     }
 
 
-
     private void startDaemonAwaitThread() {
         Thread awaitThread = new Thread() {
             @Override
@@ -110,12 +112,7 @@ public class GRpcServerRunner implements CommandLineRunner,DisposableBean  {
         awaitThread.setDaemon(false);
         awaitThread.start();
     }
-    @Override
-    public void destroy() throws Exception {
-        log.info("Shutting down gRPC server ...");
-        Optional.ofNullable(server).ifPresent(Server::shutdown);
-        log.info("gRPC server stopped.");
-    }
+
 
     private <T> Stream<String> getBeanNamesByTypeWithAnnotation(Class<? extends Annotation> annotationType, Class<T> beanType) throws Exception{
 
@@ -130,10 +127,7 @@ public class GRpcServerRunner implements CommandLineRunner,DisposableBean  {
                         StandardMethodMetadata metadata = (StandardMethodMetadata) beanDefinition.getSource();
                         return metadata.isAnnotated(annotationType.getName());
                     }
-
                     return false;
                 });
     }
-
-
 }

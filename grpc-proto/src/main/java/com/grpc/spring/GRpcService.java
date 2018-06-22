@@ -5,10 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.annotation.*;
 
-/**
- * @author cruzczhang
- *
- */
+// 注解的 Service 是 GRPC 服务的实现
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
