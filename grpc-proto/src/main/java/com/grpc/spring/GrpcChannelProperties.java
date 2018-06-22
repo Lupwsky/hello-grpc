@@ -5,10 +5,7 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author cruzczhang
- *
- */
+
 @Data
 public class GrpcChannelProperties {
 
