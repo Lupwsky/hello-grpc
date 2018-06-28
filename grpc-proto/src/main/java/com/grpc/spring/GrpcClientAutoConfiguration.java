@@ -1,7 +1,6 @@
 package com.grpc.spring;
 
 import com.grpc.spring.client.auto.config.*;
-import com.grpc.spring.client.auto.config.annotation.GrpcClient;
 import io.grpc.LoadBalancer;
 import io.grpc.util.RoundRobinLoadBalancerFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -44,20 +43,19 @@ public class GrpcClientAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public GrpcChannelFactory addressChannelFactory(GrpcChannelsProperties channels,
+    public GrpcChannelFactory addressChannelFactory(GrpcChannelsProperties grpcChannelsProperties,
                                                     LoadBalancer.Factory loadBalancerFactory,
                                                     GlobalClientInterceptorRegistry globalClientInterceptorRegistry) {
     	log.error("AddressChannelFactory bean create");
-        return new AddressChannelFactory(channels, loadBalancerFactory, globalClientInterceptorRegistry);
+        return new AddressChannelFactory(grpcChannelsProperties, loadBalancerFactory, globalClientInterceptorRegistry);
     }
 
 
     @Bean
-    @ConditionalOnClass(GrpcClient.class)
-    @ConditionalOnMissingBean
     @Primary
+    @ConditionalOnMissingBean
     public GrpcClientBeanPostProcessor grpcClientBeanPostProcessor() {
-        log.error("AddressChannelFactory bean create");
+        log.error("GrpcClientBeanPostProcessor bean create");
         return new GrpcClientBeanPostProcessor();
     }
 
