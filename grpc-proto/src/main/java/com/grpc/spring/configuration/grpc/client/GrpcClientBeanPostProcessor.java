@@ -1,4 +1,4 @@
-package com.grpc.spring.client.auto.config;
+package com.grpc.spring.configuration.grpc.client;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.grpc.spring.client.auto.config.annotation.GrpcClient;
+import com.grpc.spring.configuration.grpc.client.annotation.GrpcClient;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;

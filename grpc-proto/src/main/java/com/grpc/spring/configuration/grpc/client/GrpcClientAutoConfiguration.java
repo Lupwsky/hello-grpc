@@ -1,6 +1,6 @@
-package com.grpc.spring;
+package com.grpc.spring.configuration.grpc.client;
 
-import com.grpc.spring.client.auto.config.*;
+import com.grpc.spring.configuration.grpc.client.*;
 import io.grpc.LoadBalancer;
 import io.grpc.util.RoundRobinLoadBalancerFactory;
 import lombok.extern.slf4j.Slf4j;

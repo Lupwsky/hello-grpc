@@ -1,7 +1,7 @@
-package com.grpc.spring.server.auto.config;
+package com.grpc.spring.configuration.grpc.server;
 
-import com.grpc.spring.GrpcGlobalInterceptor;
-import com.grpc.spring.server.auto.config.annotation.GrpcService;
+import com.grpc.spring.configuration.grpc.GrpcGlobalInterceptor;
+import com.grpc.spring.configuration.grpc.server.annotation.GrpcService;
 import io.grpc.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanCreationException;

@@ -1,4 +1,4 @@
-package com.grpc.spring;
+package com.grpc.spring.configuration.grpc;
 
 import org.springframework.stereotype.Component;
 

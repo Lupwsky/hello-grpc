@@ -1,4 +1,4 @@
-package com.grpc.spring.server.auto.config.annotation;
+package com.grpc.spring.configuration.grpc.server.annotation;
 
 import io.grpc.ServerInterceptor;
 import org.springframework.stereotype.Service;

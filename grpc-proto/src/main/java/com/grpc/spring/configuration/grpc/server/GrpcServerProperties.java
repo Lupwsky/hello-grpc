@@ -1,4 +1,4 @@
-package com.grpc.spring.server.auto.config;
+package com.grpc.spring.configuration.grpc.server;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

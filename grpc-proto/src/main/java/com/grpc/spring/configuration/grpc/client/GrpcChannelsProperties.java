@@ -1,4 +1,4 @@
-package com.grpc.spring.client.auto.config;
+package com.grpc.spring.configuration.grpc.client;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;

@@ -1,4 +1,4 @@
-package com.grpc.spring.client.auto.config.annotation;
+package com.grpc.spring.configuration.grpc.client.annotation;
 
 import io.grpc.ClientInterceptor;
 

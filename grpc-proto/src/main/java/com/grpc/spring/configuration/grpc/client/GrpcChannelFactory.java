@@ -1,4 +1,4 @@
-package com.grpc.spring.client.auto.config;
+package com.grpc.spring.configuration.grpc.client;
 
 import java.util.List;
 

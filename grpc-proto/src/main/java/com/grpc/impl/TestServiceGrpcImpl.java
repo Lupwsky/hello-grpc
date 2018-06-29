@@ -1,7 +1,7 @@
 package com.grpc.impl;
 
 
-import com.grpc.spring.server.auto.config.annotation.GrpcService;
+import com.grpc.spring.configuration.grpc.server.annotation.GrpcService;
 import com.hello.grpc.proto.Request;
 import com.hello.grpc.proto.Response;
 import com.hello.grpc.proto.TestServiceGrpc;

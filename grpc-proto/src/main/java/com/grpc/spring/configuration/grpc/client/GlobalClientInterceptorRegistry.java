@@ -1,4 +1,4 @@
-package com.grpc.spring.client.auto.config;
+package com.grpc.spring.configuration.grpc.client;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
