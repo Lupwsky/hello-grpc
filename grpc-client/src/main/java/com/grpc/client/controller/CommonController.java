@@ -1,5 +1,6 @@
 package com.grpc.client.controller;
 
+import com.grpc.client.service.grpc.TestServiceGrpcImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,17 +12,19 @@ import java.util.Map;
 @RestController
 public class CommonController {
 
+    private final TestServiceGrpcImpl testServiceGrpc;
+
     @Autowired
-    private DeviceGrpcService deviceGrpcService;
+    public CommonController(TestServiceGrpcImpl testServiceGrpc) {
+        this.testServiceGrpc = testServiceGrpc;
+    }
 
-
-    @RequestMapping(value = "/grpc/demo/2/test", method = RequestMethod.GET)
+    @RequestMapping(value = "/grpc/client/common/test", method = RequestMethod.GET)
     public Map<String, Object> grpcTest() {
         Map<String, Object> map = new HashMap<>();
         map.put("code", 10000);
         map.put("msg", "success");
-        String strReturn = deviceGrpcService.insertDeviceFix();
-        System.out.print(strReturn);
+        testServiceGrpc.test();
         return map;
     }
 }
