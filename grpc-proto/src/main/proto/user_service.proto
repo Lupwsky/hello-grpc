@@ -2,12 +2,12 @@ syntax = "proto3";
 
 option java_multiple_files = true;
 option java_package = "com.hello.grpc.proto";
-option java_outer_classname = "TestServiceProto";
+option java_outer_classname = "UserServiceProto";
 
 // 定义的 RPC 接口
-service TestService {
+service UserService {
     // 可被调用的方法
-    rpc test (Request) returns (Response){}
+    rpc getUserInfo (Request) returns (Response){};
 }
 
 message Request {

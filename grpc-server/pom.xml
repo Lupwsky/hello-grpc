@@ -23,11 +23,11 @@
 
 
     <dependencies>
-        <!--<dependency>-->
-            <!--<groupId>net.devh</groupId>-->
-            <!--<artifactId>grpc-server-spring-boot-starter</artifactId>-->
-            <!--<version>${spring.boot.grpc.server.version}</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>net.devh</groupId>
+            <artifactId>grpc-server-spring-boot-starter</artifactId>
+            <version>${spring.boot.grpc.server.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.lupw</groupId>

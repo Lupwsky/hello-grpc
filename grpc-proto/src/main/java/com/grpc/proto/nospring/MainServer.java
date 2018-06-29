@@ -1,7 +1,6 @@
-package com.grpc.server.nospring;
+package com.grpc.proto.nospring;
 
 
-import com.grpc.server.service.grpc.TestServiceGrpcImpl;
 
 /**
  * Company: wesure

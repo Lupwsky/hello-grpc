@@ -2,8 +2,9 @@ package com.grpc.client.service.grpc;
 
 import com.grpc.client.configuration.grpc.GrpcClient;
 import com.hello.grpc.proto.Request;
-import com.hello.grpc.proto.TestServiceGrpc;
+import com.hello.grpc.proto.UserServiceGrpc;
 import io.grpc.Channel;
+import org.springframework.stereotype.Service;
 
 /**
  * Company: wesure
@@ -13,13 +14,14 @@ import io.grpc.Channel;
  * @author v_pwlu
  * @date 2018/6/29
  */
+@Service
 public class TestServiceGrpcImpl {
 
     @GrpcClient("test-server-rpc")
     private Channel channel;
 
-    public void test() {
-        TestServiceGrpc.TestServiceBlockingStub stub = TestServiceGrpc.newBlockingStub(channel);
-        stub.test(Request.newBuilder().setId(1).build());
+    public void getUserInfo() {
+        UserServiceGrpc.UserServiceBlockingStub stub = UserServiceGrpc.newBlockingStub(channel);
+        stub.getUserInfo(Request.newBuilder().setId(1).build());
     }
 }
