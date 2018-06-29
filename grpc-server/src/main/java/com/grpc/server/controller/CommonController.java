@@ -17,6 +17,4 @@ public class CommonController {
         map.put("msg", "success");
         return map;
     }
-
-    
 }

@@ -40,48 +40,24 @@ public class GrpcServerRunner implements CommandLineRunner, DisposableBean  {
     @Override
     public void run(String... args) throws Exception {
         log.info("Starting gRPC Server ...");
-        // 创建 ServerBuilder，绑定端口号，server 的 ip 使用默认的 0.0.0.0
+
+        Collection<ServerInterceptor> globalInterceptors = getBeanNamesByTypeWithAnnotation(GRpcGlobalInterceptor.class,ServerInterceptor.class)
+                .map(name -> applicationContext.getBeanFactory().getBean(name,ServerInterceptor.class))
+                .collect(Collectors.toList());
+
         final ServerBuilder<?> serverBuilder = ServerBuilder.forPort(gRpcServerProperties.getPort());
 
-        // 获取所有的类型为 BindableService 类的 bean 的名称，gRPC 的实现类均是 BindableService 的子类
-        String[] beanNames = applicationContext.getBeanNamesForType(BindableService.class);
-        for (String name : beanNames) {
-            log.info(name);
-        }
+        // find and register all GRpcService-enabled beans
+        getBeanNamesByTypeWithAnnotation(GrpcService.class,BindableService.class)
+                .forEach(name->{
+                    BindableService srv = applicationContext.getBeanFactory().getBean(name, BindableService.class);
+                    ServerServiceDefinition serviceDefinition = srv.bindService();
+                    GrpcService gRpcServiceAnn = applicationContext.findAnnotationOnBean(name,GrpcService.class);
+                    serviceDefinition  = bindInterceptors(serviceDefinition,gRpcServiceAnn,globalInterceptors);
+                    serverBuilder.addService(serviceDefinition);
+                    log.info("{} has been registered.", serviceDefinition.getServiceDescriptor().getName());
 
-        // 获取所有使用了注解 @GrpcServer 的 bean 类
-        Map<String, Object> beansWithAnnotation = applicationContext.getBeansWithAnnotation(GrpcService.class);
-
-        // 类型为 BindableService 且使用了 @GrpcServer 注解的 bean 类，才是一个有效的 gRPC 服务类
-        // 因此继承实现了 BindableService 类但是没有使用 @GrpcServer 注解的类和使用了 @GrpcServer 注解的类但不是 BindableService 子类的 bean 都需要剔除掉
-        List<String> beanNameList = new ArrayList<>();
-        for (String name : beanNames) {
-            if (beansWithAnnotation != null && beansWithAnnotation.containsKey(name)) {
-                beanNameList.add(name);
-            }
-        }
-
-        // 根据 beanName 获取这些 bean 实例，并绑定服务实现类
-        for (String name : beanNameList) {
-            BindableService bindableService = applicationContext.getBeanFactory().getBean(name, BindableService.class);
-            serverBuilder.addService(bindableService);
-            log.info("{} has been registered", name);
-        }
-
-//        // 获取所有使用 @GrpcServer 注解的 Bean，将其绑定
-//        Map<String, Object> beansWithAnnotation = applicationContext.getBeansWithAnnotation(GrpcService.class);
-//
-//
-//        getBeanNamesByTypeWithAnnotation(GrpcService.class, BindableService.class)
-//                .forEach(name->{
-//                    BindableService srv = applicationContext.getBeanFactory().getBean(name, BindableService.class);
-//                    ServerServiceDefinition serviceDefinition = srv.bindService();
-//                    GrpcService grpcServiceAnn = applicationContext.findAnnotationOnBean(name, GrpcService.class);
-//                    serviceDefinition  = bindInterceptors(serviceDefinition,grpcServiceAnn, globalInterceptors);
-//                    serverBuilder.addService(serviceDefinition);
-//                    log.info("{} has been registered.", serviceDefinition.getServiceDescriptor().getName());
-//
-//                });
+                });
 
         // 启动服务类
         server = serverBuilder.build().start();
