@@ -27,17 +27,18 @@ public class GrpcClientAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public GlobalClientInterceptorRegistry globalClientInterceptorRegistry() {
-        log.error("GlobalClientInterceptorRegistry bean create");
-        return new GlobalClientInterceptorRegistry();
+    public LoadBalancer.Factory grpcLoadBalancerFactory() {
+        log.error("RoundRobinLoadBalancerFactory bean create");
+        // 客户端负载均衡策略
+        return RoundRobinLoadBalancerFactory.getInstance();
     }
 
 
     @Bean
     @ConditionalOnMissingBean
-    public LoadBalancer.Factory grpcLoadBalancerFactory() {
-        log.error("RoundRobinLoadBalancerFactory bean create");
-        return RoundRobinLoadBalancerFactory.getInstance();
+    public GlobalClientInterceptorRegistry globalClientInterceptorRegistry() {
+        log.error("GlobalClientInterceptorRegistry bean create");
+        return new GlobalClientInterceptorRegistry();
     }
 
 

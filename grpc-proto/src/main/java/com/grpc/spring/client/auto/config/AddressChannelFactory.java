@@ -14,15 +14,13 @@ import io.grpc.LoadBalancer;
 import io.grpc.NameResolver;
 import io.grpc.netty.NettyChannelBuilder;
 
-/**
- * @author cruzczhang
- *
- */
+
 public class AddressChannelFactory implements GrpcChannelFactory {
     private final GrpcChannelsProperties properties;
     private final LoadBalancer.Factory loadBalancerFactory;
     private final NameResolver.Factory nameResolverFactory;
     private final GlobalClientInterceptorRegistry globalClientInterceptorRegistry;
+
 
     public AddressChannelFactory(GrpcChannelsProperties properties, LoadBalancer.Factory loadBalancerFactory, GlobalClientInterceptorRegistry globalClientInterceptorRegistry) {
         this.properties = properties;
@@ -31,10 +29,12 @@ public class AddressChannelFactory implements GrpcChannelFactory {
         this.globalClientInterceptorRegistry = globalClientInterceptorRegistry;
     }
 
+
     @Override
     public Channel createChannel(String name) {
         return this.createChannel(name, null);
     }
+
 
     @Override
     public Channel createChannel(String name, List<ClientInterceptor> interceptors) {
@@ -45,11 +45,14 @@ public class AddressChannelFactory implements GrpcChannelFactory {
                 .usePlaintext(channelProperties.isPlaintext())
                 .enableKeepAlive(channelProperties.isEnableKeepAlive(), channelProperties.getKeepAliveDelay(), TimeUnit.SECONDS, channelProperties.getKeepAliveTimeout(), TimeUnit.SECONDS)
                 .build();
+
+        // 拦截器
         List<ClientInterceptor> globalInterceptorList = globalClientInterceptorRegistry.getClientInterceptors();
         Set<ClientInterceptor> interceptorSet = new HashSet<>();
         if (globalInterceptorList != null && !globalInterceptorList.isEmpty()) {
             interceptorSet.addAll(globalInterceptorList);
         }
+
         if (interceptors != null && !interceptors.isEmpty()) {
             interceptorSet.addAll(interceptors);
         }

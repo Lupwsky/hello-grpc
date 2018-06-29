@@ -13,10 +13,7 @@ import javax.annotation.PostConstruct;
 import io.grpc.ClientInterceptor;
 import lombok.Getter;
 
-/**
- * @author cruzczhang
- *
- */
+
 @Getter
 public class GlobalClientInterceptorRegistry implements ApplicationContextAware {
 
