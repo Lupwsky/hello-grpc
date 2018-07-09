@@ -94,16 +94,16 @@ public class AddressChannelNameResolver extends NameResolver {
                     return;
                 }
 
-                List<ResolvedServerInfoGroup> resolvedServerInfoGroupList = Lists.newArrayList();
-                for (int i = 0; i < properties.getHost().size(); i++) {
-                    String host = properties.getHost().get(i);
-                    Integer port = properties.getPort().get(i);
-                    log.info("Found gRPC server {} {}:{}", name, host, port);
-                    ResolvedServerInfoGroup.Builder servers = ResolvedServerInfoGroup.builder();
-                    ResolvedServerInfo resolvedServerInfo = new ResolvedServerInfo(new InetSocketAddress(host, port), Attributes.EMPTY);
-                    resolvedServerInfoGroupList.add(servers.add(resolvedServerInfo).build());
-                }
-                savedListener.onUpdate(resolvedServerInfoGroupList, Attributes.EMPTY);
+//                List<ResolvedServerInfoGroup> resolvedServerInfoGroupList = Lists.newArrayList();
+//                for (int i = 0; i < properties.getHost().size(); i++) {
+//                    String host = properties.getHost().get(i);
+//                    Integer port = properties.getPort().get(i);
+//                    log.info("Found gRPC server {} {}:{}", name, host, port);
+//                    ResolvedServerInfoGroup.Builder servers = ResolvedServerInfoGroup.builder();
+//                    ResolvedServerInfo resolvedServerInfo = new ResolvedServerInfo(new InetSocketAddress(host, port), Attributes.EMPTY);
+//                    resolvedServerInfoGroupList.add(servers.add(resolvedServerInfo).build());
+//                }
+//                savedListener.onUpdate(resolvedServerInfoGroupList, Attributes.EMPTY);
             } finally {
                 synchronized (AddressChannelNameResolver.this) {
                     resolving = false;

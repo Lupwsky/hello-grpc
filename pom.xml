@@ -81,7 +81,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- etcd -->
+         <!-- etcd -->
         <dependency>
             <groupId>org.mousio</groupId>
             <artifactId>etcd4j</artifactId>

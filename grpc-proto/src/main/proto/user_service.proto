@@ -7,7 +7,7 @@ option java_outer_classname = "UserServiceProto";
 // 定义的 RPC 接口
 service UserService {
     // 可被调用的方法
-    rpc getUserInfo (Request) returns (Response){};
+    rpc getUserInfo (Request) returns (Response) {}
 }
 
 message Request {

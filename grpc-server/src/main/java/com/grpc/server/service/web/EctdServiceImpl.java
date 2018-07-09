@@ -43,6 +43,13 @@ public class EctdServiceImpl {
     // put value
     public void putValue(String key, String value) {
         EtcdKeyPutRequest etcdKeyPutRequest = etcdClient.put(key, value);
+        try {
+            etcdKeyPutRequest.prevValue("lupw");
+            etcdKeyPutRequest.prevExist(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         log.info(etcdKeyPutRequest.getUri());
         try {
             EtcdResponsePromise<EtcdKeysResponse> etcdResponsePromise = etcdKeyPutRequest.send();
