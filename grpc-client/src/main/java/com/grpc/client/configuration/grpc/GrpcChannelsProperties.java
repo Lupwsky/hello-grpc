@@ -6,13 +6,14 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
 
 @Data
-@ConfigurationProperties("grpc.client")
+@ConfigurationProperties("grpc")
 public class GrpcChannelsProperties {
 
     @NestedConfigurationProperty
