@@ -24,7 +24,7 @@ public class CommonController {
         Map<String, Object> map = new HashMap<>();
         map.put("code", 10000);
         map.put("msg", "success");
-//        testServiceGrpc.test();
+//        testServiceGrpc.getUserInfo();
         return map;
     }
 }

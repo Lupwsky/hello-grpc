@@ -8,8 +8,8 @@ import java.util.List;
 
 @Data
 public class GrpcChannelProperties {
-    public static final String DEFAULT_HOST = "127.0.0.1";
-    public static final Integer DEFAULT_PORT = 9090;
+    public final static String DEFAULT_HOST = "127.0.0.1";
+    public final static Integer DEFAULT_PORT = 6000;
 
     private List<String> host = new ArrayList<>();
     private List<Integer> port = new ArrayList<>();

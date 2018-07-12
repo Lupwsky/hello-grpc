@@ -2,3 +2,7 @@
 .idea/
 grpc-proto/target/
 hello-grpc.iml
+grpc-client/src/main/java/com/grpc/client/service/web/
+grpc-client/target/
+grpc-proto/src/main/webapp/
+logs/

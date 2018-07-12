@@ -3,7 +3,6 @@ package com.grpc.client.configuration.grpc;
 import io.grpc.LoadBalancer;
 import io.grpc.util.RoundRobinLoadBalancerFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -13,13 +12,12 @@ import org.springframework.context.annotation.Primary;
 @Slf4j
 @Configuration
 @EnableConfigurationProperties
-@ConditionalOnClass({GrpcChannelFactory.class})
 public class GrpcClientAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
     public GrpcChannelsProperties grpcChannelsProperties() {
-        log.error("GrpcChannelsProperties bean create");
+        log.info("GrpcChannelsProperties bean create");
         return new GrpcChannelsProperties();
     }
 
@@ -27,8 +25,7 @@ public class GrpcClientAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public LoadBalancer.Factory grpcLoadBalancerFactory() {
-        log.error("RoundRobinLoadBalancerFactory bean create");
-        // 客户端负载均衡策略
+        log.info("RoundRobinLoadBalancerFactory bean create");
         return RoundRobinLoadBalancerFactory.getInstance();
     }
 
@@ -36,7 +33,6 @@ public class GrpcClientAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public GlobalClientInterceptorRegistry globalClientInterceptorRegistry() {
-        log.error("GlobalClientInterceptorRegistry bean create");
         return new GlobalClientInterceptorRegistry();
     }
 
@@ -46,7 +42,6 @@ public class GrpcClientAutoConfiguration {
     public GrpcChannelFactory addressChannelFactory(GrpcChannelsProperties grpcChannelsProperties,
                                                     LoadBalancer.Factory loadBalancerFactory,
                                                     GlobalClientInterceptorRegistry globalClientInterceptorRegistry) {
-    	log.error("AddressChannelFactory bean create");
         return new AddressChannelFactory(grpcChannelsProperties, loadBalancerFactory, globalClientInterceptorRegistry);
     }
 
@@ -55,7 +50,6 @@ public class GrpcClientAutoConfiguration {
     @Primary
     @ConditionalOnMissingBean
     public GrpcClientBeanPostProcessor grpcClientBeanPostProcessor() {
-        log.error("GrpcClientBeanPostProcessor bean create");
         return new GrpcClientBeanPostProcessor();
     }
 
