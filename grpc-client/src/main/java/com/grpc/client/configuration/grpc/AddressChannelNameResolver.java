@@ -70,7 +70,7 @@ public class AddressChannelNameResolver extends NameResolver {
 
 
     /**
-     * 获取解析器的名称
+     * 获取解析fu'w的名称
      *
      * @return 解析器名称
      */
@@ -95,6 +95,12 @@ public class AddressChannelNameResolver extends NameResolver {
     }
 
 
+    /**
+     * 客户端负载均衡策略由客户端内置负载均衡能力，通过静态配置、域名解析服务等方式获取RPC服务端地址列表，
+     * 并将地址列表缓存到客户端内存中，这里的地址保存在内存的 properties 中，这些值在配置文件中配置了
+     * 有一个大的弊端就是不能自动的发现服务和去除无用的服务
+     *
+     */
     @Override
     public final synchronized void refresh() {
         Preconditions.checkState(listener != null, "not started");
@@ -126,7 +132,7 @@ public class AddressChannelNameResolver extends NameResolver {
                 for (int i = 0; i < properties.getHost().size(); i++) {
                     String host = properties.getHost().get(i);
                     Integer port = properties.getPort().get(i);
-                    log.debug("发现 gRPC 服务 {} {}:{}", name, host, port);
+                    log.warn("发现 gRPC 服务 {} {}:{}", name, host, port);
                     equivalentAddressGroupList.add(new EquivalentAddressGroup(new InetSocketAddress(host, port), Attributes.EMPTY));
                 }
 

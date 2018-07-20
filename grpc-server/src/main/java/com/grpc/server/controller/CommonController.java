@@ -14,7 +14,7 @@ public class CommonController {
     public Map<String, Object> grpcTest() {
         Map<String, Object> map = new HashMap<>();
         map.put("code", 10000);
-        map.put("msg", "success");
+        map.put("message", "success");
         return map;
     }
 }
