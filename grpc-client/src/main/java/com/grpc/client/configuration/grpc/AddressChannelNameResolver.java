@@ -70,7 +70,7 @@ public class AddressChannelNameResolver extends NameResolver {
 
 
     /**
-     * 获取解析fu'w的名称
+     * 获取解析器名称
      *
      * @return 解析器名称
      */
@@ -96,10 +96,11 @@ public class AddressChannelNameResolver extends NameResolver {
 
 
     /**
-     * 客户端负载均衡策略由客户端内置负载均衡能力，通过静态配置、域名解析服务等方式获取RPC服务端地址列表，
-     * 并将地址列表缓存到客户端内存中，这里的地址保存在内存的 properties 中，这些值在配置文件中配置了
-     * 有一个大的弊端就是不能自动的发现服务和去除无用的服务
+     * (1) 客户端负载均衡策略由客户端内置负载均衡能力，通过静态配置、域名解析服务等方式获取RPC服务端地址列表，
+     *     并将地址列表缓存到客户端内存中，这里的地址保存 properties 属性中，这些值在配置文件中配置了，
+     *     地址列表缓存再本地内存有一个大的弊端就是不能自动的发现服务和去除无用的服务
      *
+     * (2) 会不停的循环读取配置文件，用来发现本地缓存的服务地址
      */
     @Override
     public final synchronized void refresh() {

@@ -1,5 +1,6 @@
 package com.grpc.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.grpc.client.service.web.RestTemplateServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -27,5 +28,15 @@ public class RestTemplateServiceImplTest {
     @Test
     public void restTemplateGetRequestTest() {
         restTemplateService.restTemplateGetRequest();
+    }
+
+
+    @Test
+    public void restTemplatePostRequestTest() {
+        try {
+            restTemplateService.restTemplatePostRequest();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 }
