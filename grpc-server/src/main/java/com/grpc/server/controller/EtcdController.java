@@ -1,7 +1,6 @@
 package com.grpc.server.controller;
 
 import com.grpc.server.service.web.EctdServiceImpl;
-import mousio.etcd4j.responses.EtcdVersionResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,9 +31,7 @@ public class EtcdController {
     @RequestMapping(value = "/etcd/get/version/info", method = RequestMethod.GET)
     public Map<String, Object> getEctdVersionInfo () {
         Map<String, Object> resp = new HashMap<>();
-        EtcdVersionResponse versionResponse = ectdService.getEtcdVersionInfo();
-        resp.put("server", versionResponse.getServer());
-        resp.put("cluster", versionResponse.getCluster());
+        ectdService.getEtcdVersionInfo();
         return resp;
     }
 
@@ -42,6 +39,6 @@ public class EtcdController {
 
     @RequestMapping(value = "/etcd/put/value", method = RequestMethod.POST)
     public void putValue (String key, String value) {
-        ectdService.putValue(key, value);
+//        ectdService.putValue(key, value);
     }
 }

@@ -87,11 +87,11 @@
             <scope>provided</scope>
         </dependency>
 
-         <!-- etcd -->
+        <!-- etcd -->
         <dependency>
-            <groupId>org.mousio</groupId>
-            <artifactId>etcd4j</artifactId>
-            <version>2.15.0</version>
+            <groupId>com.coreos</groupId>
+            <artifactId>jetcd-core</artifactId>
+            <version>0.0.2</version>
         </dependency>
     </dependencies>
 
