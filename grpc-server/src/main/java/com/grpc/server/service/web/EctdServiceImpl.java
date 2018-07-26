@@ -1,9 +1,11 @@
 package com.grpc.server.service.web;
 
+import com.alibaba.fastjson.JSON;
 import com.coreos.jetcd.Client;
 import com.coreos.jetcd.KV;
 import com.coreos.jetcd.data.ByteSequence;
 import com.coreos.jetcd.kv.GetResponse;
+import com.coreos.jetcd.kv.PutResponse;
 import lombok.extern.slf4j.Slf4j;
 //import mousio.etcd4j.EtcdClient;
 //import mousio.etcd4j.promises.EtcdResponsePromise;
@@ -76,15 +78,24 @@ public class EctdServiceImpl {
 
     // 获取版本信息
     public void getEtcdVersionInfo() {
-        Client client = Client.builder().endpoints("http://192.168.80.130:2379").build();
+        Client client = Client.builder().endpoints("http://192.168.80.130:2379",
+                "http://192.168.80.130:2380",
+                "http://192.168.80.130:2381").build();
         KV kvClient = client.getKVClient();
         try {
             ByteSequence bsKey = ByteSequence.fromString("username");
             ByteSequence bsValue = ByteSequence.fromString("lupw");
-            kvClient.put(bsKey, bsValue).get();
-            CompletableFuture<GetResponse> getFuture = kvClient.get(bsKey);
-            GetResponse response = getFuture.get();
-            log.warn("Response = {}", response.getKvs().get(0));
+            PutResponse putResponse = kvClient.put(bsKey, bsValue).get();
+            log.warn("putResponse = {}", JSON.toJSONString(putResponse));
+
+            GetResponse getResponse = kvClient.get(bsKey).get();
+            log.warn("response = {}", JSON.toJSONString(getResponse));
+
+
+            ByteSequence byteSequenceKey = getResponse.getKvs().get(0).getKey();
+            ByteSequence byteSequenceValue = getResponse.getKvs().get(0).getValue();
+            log.error(byteSequenceKey.toStringUtf8());
+            log.error(byteSequenceValue.toStringUtf8());
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
