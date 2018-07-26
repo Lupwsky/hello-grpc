@@ -17,6 +17,9 @@
         <module>grpc-client</module>
         <module>grpc-proto</module>
         <module>grpc-server</module>
+        <module>cloud-server0</module>
+        <module>cloud-client0</module>
+        <module>cloud-register</module>
     </modules>
 
 
@@ -58,10 +61,17 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- spring-boot-starter-test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!-- spring-cloud -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-dependencies</artifactId>
         </dependency>
 
         <!-- junit -->
@@ -94,7 +104,6 @@
             <version>0.0.2</version>
         </dependency>
     </dependencies>
-
 
     <build>
         <finalName>hello-grpc</finalName>
