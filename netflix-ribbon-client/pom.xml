@@ -9,18 +9,21 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.netflix</groupId>
-    <artifactId>netflix-ribbon</artifactId>
+    <artifactId>ribbon</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>netflix-ribbon</name>
-    <description>Demo project for ribbon</description>
+    <name>netflix-ribbon-client</name>
+    <description>Demo project for Spring Boot</description>
 
     <properties>
 
     </properties>
 
     <dependencies>
-
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -31,4 +34,6 @@
             </plugin>
         </plugins>
     </build>
+
+
 </project>
