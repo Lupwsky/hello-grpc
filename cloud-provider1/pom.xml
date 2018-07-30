@@ -9,9 +9,9 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>cloud-client0</artifactId>
+    <artifactId>cloud-provider1</artifactId>
     <packaging>war</packaging>
-    <name>cloud-client0</name>
+    <name>cloud-provider1</name>
     <url>http://www.example.com</url>
 
     <properties>
@@ -21,11 +21,11 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-eureka-server</artifactId>
+            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
         </dependency>
     </dependencies>
 
     <build>
-        <finalName>cloud-client0</finalName>
+        <finalName>cloud-provider1</finalName>
     </build>
 </project>

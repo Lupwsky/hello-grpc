@@ -7,11 +7,11 @@
         <groupId>com.lupw</groupId>
         <version>1.0</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>cloud-register</artifactId>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>cloud-provider0</artifactId>
     <packaging>war</packaging>
-    <name>cloud-register Maven Webapp</name>
+    <name>cloud-provider0</name>
     <url>http://www.example.com</url>
 
     <properties>
@@ -21,12 +21,11 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-netflix-eureka-server</artifactId>
-            <version>1.1.0.RELEASE</version>
+            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
         </dependency>
     </dependencies>
 
     <build>
-        <finalName>cloud-register</finalName>
+        <finalName>cloud-provider0</finalName>
     </build>
 </project>

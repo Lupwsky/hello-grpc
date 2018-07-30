@@ -1,8 +1,9 @@
 # Created by .ignore support plugin (hsz.mobi)
 .idea/
-grpc-proto/target/
-hello-grpc.iml
-grpc-client/target/
-grpc-proto/src/main/webapp/
+*.iml
 logs/
-grpc-server/target/
+.mvn/
+mvnw
+mvnw.cmd
+target/
+webapp/

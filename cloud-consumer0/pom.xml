@@ -9,9 +9,9 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>cloud-server0</artifactId>
+    <artifactId>cloud-consumer0</artifactId>
     <packaging>war</packaging>
-    <name>cloud-server0</name>
+    <name>cloud-consumer0 Maven Webapp</name>
     <url>http://www.example.com</url>
 
     <properties>
@@ -21,11 +21,16 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-ribbon</artifactId>
         </dependency>
     </dependencies>
 
     <build>
-        <finalName>cloud-server0</finalName>
+        <finalName>cloud-consumer0</finalName>
     </build>
 </project>
