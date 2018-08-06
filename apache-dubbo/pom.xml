@@ -9,10 +9,15 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>cloud-consumer0</artifactId>
-    <packaging>war</packaging>
-    <name>cloud-consumer0</name>
+    <artifactId>apache-dubbo</artifactId>
+    <packaging>pom</packaging>
+    <name>apache-dubbo</name>
     <url>http://www.example.com</url>
+    <modules>
+        <module>dubbo-api</module>
+        <module>dubbo-provider</module>
+        <module>dubbo-consumer</module>
+    </modules>
 
     <properties>
 
@@ -20,17 +25,19 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>2.6.2</version>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-ribbon</artifactId>
+            <groupId>com.101tec</groupId>
+            <artifactId>zkclient</artifactId>
+            <version>0.10</version>
         </dependency>
     </dependencies>
 
     <build>
-        <finalName>cloud-consumer0</finalName>
+        <finalName>apache-dubbo</finalName>
     </build>
 </project>

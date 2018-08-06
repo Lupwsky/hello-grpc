@@ -21,6 +21,7 @@
         <module>cloud-provider0</module>
         <module>cloud-consumer0</module>
         <module>cloud-provider1</module>
+        <module>apache-dubbo</module>
     </modules>
 
 
