@@ -6,7 +6,7 @@ package com.lupw.dubbo;
  *
  * @author v_pwlu 2018/8/1
  */
-public class UserCenterServiceImpl implements UserCenterService{
+public class UserCenterServiceImpl implements UserCenterService {
 
     @Override
     public String getUsername() {

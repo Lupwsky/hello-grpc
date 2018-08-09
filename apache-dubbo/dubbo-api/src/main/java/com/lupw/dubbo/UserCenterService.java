@@ -4,10 +4,9 @@ package com.lupw.dubbo;
  * company: wesure
  * project Name: hello-grpc
  *
- * @author v_pwlu 2018/8/1
+ * @author v_pwlu 2018/8/9
  */
 public interface UserCenterService {
-
     /**
      * 获取用户名
      *
