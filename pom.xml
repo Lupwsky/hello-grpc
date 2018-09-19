@@ -22,6 +22,7 @@
         <module>cloud-consumer0</module>
         <module>cloud-provider1</module>
         <module>apache-dubbo</module>
+        <module>thread-executor</module>
     </modules>
 
 
