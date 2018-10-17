@@ -31,15 +31,38 @@ public class TestMain {
         dataNodeList.add(DataNode.builder().name("C").soc(1).build());
         dataNodeList.add(DataNode.builder().name("D").soc(1).build());
         dataNodeList.add(DataNode.builder().name("E").soc(1).build());
+        dataNodeList.add(DataNode.builder().name("F").soc(1).build());
+        dataNodeList.add(DataNode.builder().name("G").soc(1).build());
+        dataNodeList.add(DataNode.builder().name("H").soc(1).build());
+        dataNodeList.add(DataNode.builder().name("I").soc(1).build());
+        dataNodeList.add(DataNode.builder().name("J").soc(1).build());
+        dataNodeList.add(DataNode.builder().name("K").soc(1).build());
+        dataNodeList.add(DataNode.builder().name("L").soc(1).build());
+        dataNodeList.add(DataNode.builder().name("M").soc(1).build());
+        dataNodeList.add(DataNode.builder().name("N").soc(1).build());
+        dataNodeList.add(DataNode.builder().name("O").soc(1).build());
+        dataNodeList.add(DataNode.builder().name("P").soc(1).build());
+        dataNodeList.add(DataNode.builder().name("Q").soc(1).build());
+        dataNodeList.add(DataNode.builder().name("R").soc(1).build());
+        dataNodeList.add(DataNode.builder().name("S").soc(1).build());
+        dataNodeList.add(DataNode.builder().name("T").soc(1).build());
+        dataNodeList.add(DataNode.builder().name("U").soc(1).build());
+        dataNodeList.add(DataNode.builder().name("V").soc(1).build());
+        dataNodeList.add(DataNode.builder().name("W").soc(1).build());
+        dataNodeList.add(DataNode.builder().name("X").soc(1).build());
+        dataNodeList.add(DataNode.builder().name("Y").soc(1).build());
+        dataNodeList.add(DataNode.builder().name("Z").soc(1).build());
 
-        Optional<DataNode> optionalDataNode = dataNodeList.stream().reduce((dataNode, dataNode2) -> {
-            log.info("{} = {}", "dataNode", JSON.toJSONString(dataNode));
-            log.info("{} = {}", "dataNode2", JSON.toJSONString(dataNode2));
-            int total = dataNode.getSoc() + dataNode2.getSoc();
-            log.info("total = {}", total);
+        DataNode initDataNode = DataNode.builder().name("I").soc(5).build();
+        DataNode finalDataNode = dataNodeList.parallelStream().reduce(initDataNode, (result, item) -> {
+            log.info("{} = {}", "result", JSON.toJSONString(result));
+            log.info("{} = {}", "item  ", JSON.toJSONString(item));
+            int total = result.getSoc() + item.getSoc();
             return DataNode.builder().name("N").soc(total).build();
+        }, (result, item) -> {
+            int total = result.getSoc() + item.getSoc();
+            return DataNode.builder().name("F").soc(total).build();
         });
-        DataNode dataNode = optionalDataNode.orElse(DataNode.builder().build());
-        log.info("finalDataNode" + JSON.toJSONString(dataNode));
+        log.info("finalDataNode" + JSON.toJSONString(finalDataNode));
     }
 }
