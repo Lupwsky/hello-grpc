@@ -10,7 +10,7 @@ import java.util.concurrent.*;
  * @author v_pwlu 2018/10/11
  */
 @Slf4j
-public class TestMain {
+public class FutureMain {
 
     public static class DelayTask implements Callable<String> {
 

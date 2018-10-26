@@ -13,28 +13,14 @@ import java.util.concurrent.Executors;
  * @author v_pwlu 2018/9/19
  */
 @Slf4j
-public class Main {
+public class SplitMain {
 
     public static void main(String[] args) {
-//        ExecutorService executorService = Executors.newCachedThreadPool();
-//        for (int i = 0; i < 10; i++) {
-//            executorService.execute(new TestRunnable());
-//        }
-//        executorService.shutdown();
 
         String str = "";
         String[] strs = str.split("\\.");
         log.info(Arrays.toString(strs));
         String b= strs[0];
         log.info(b);
-    }
-
-
-    static class TestRunnable implements Runnable {
-
-        @Override
-        public void run() {
-            log.info("{} 线程被调用了", Thread.currentThread().getName());
-        }
     }
 }
