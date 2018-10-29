@@ -22,6 +22,10 @@ public class FutureMain {
     }
 
 
+    // 创建线程的 2 种方式, 一种是直接继承 Thread, 另外一种就是实现 Runnable 接口, 这两种方式在执行完任务之后无法获取执行结果
+    // 从 Java 1.5 开始，就提供了 Callable 和 Future 两个类, 通过它们可以在任务执行完毕之后得到任务执行结果
+    // Future 可以监视目标线程调用 call 的情况, 当你调用 Future 的 get 方法以获获取结果时, 当前线程就开始阻塞, 直到 call 方法结束返回结果
+
     public static void main(String[] args) {
         List<Future<String>> futureList = new ArrayList<>();
 
@@ -38,8 +42,7 @@ public class FutureMain {
         for (int i = 0; i < 1000; i++) {
             futureList.add(executorService.submit(new DelayTask()));
         }
-
-        // Future 可以监视目标线程调用 call 的情况, 当你调用 Future 的 get 方法以获得结果时, 当前线程就开始阻塞, 直到 call 方法结束返回结果
+        
         futureList.forEach(future -> {
             try {
                 String threadName = future.get();
