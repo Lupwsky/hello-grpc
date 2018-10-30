@@ -19,7 +19,7 @@ public class IOMain {
         // mark: position 的备注位置, 只有手动掉用 mark 方法将才会将当前 position 的位置记录到 mark 中, reset 方法则可将当前记录的 mark 值赋值给 position
         //       [https://blog.csdn.net/yiifaa/article/details/76223070]
         // position: 下一个被写或者被读取的元素的位置的索引, 这个值在元素被读取和被写入后自动的更新, 也可以使用 position 方法主动更新
-        // limit: 缓冲区中能被读取的元素的上界值, 例如缓冲区容量为 10, limit 为 5, 那么只能读取前 5 个元素, 读取第六个元素时将会出现异常
+        // limit: 缓冲区中能被读取的元素的上界值, 例如缓冲区容量为 10, limit 为 5, 即使写入的元素数量大于 5 个也只能读取前 5 个元素
         // capacity: 缓冲区的容量, 这个值一旦被确定后不允许被改变
 
         CharBuffer buffer = CharBuffer.allocate(100);
