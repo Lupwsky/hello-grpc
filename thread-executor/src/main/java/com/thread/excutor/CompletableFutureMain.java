@@ -12,32 +12,23 @@ import java.util.concurrent.*;
 public class CompletableFutureMain {
 
     public static void main(String[] args) {
-        CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> {
+        CompletableFuture<Integer> future1 = CompletableFuture.supplyAsync(() -> {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             return 100;
-        });
-
-        future.thenAccept((result) -> {
-            try {
-                log.info("[MAIN] threadName = {}", Thread.currentThread().getName());
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-
-        log.info("[MAIN] 不管 thenAccept 里面的方法是否执行完成, 我先执行");
+        }).whenComplete((result, error) -> log.info("[Main] result = {}, error = {}", result, error.getMessage()));
 
         try {
-            Thread.sleep(4000);
-        } catch (InterruptedException e) {
+            DateTime startTime = DateTime.now();
+            int finalResult = future1.get(10, TimeUnit.SECONDS);
+            DateTime endTime = DateTime.now();
+            log.info("[MAIN] finalResult = {}, time = {}ms", finalResult, endTime.getMillis() - startTime.getMillis());
+        } catch (InterruptedException | TimeoutException | ExecutionException e) {
             e.printStackTrace();
         }
-        log.info("[MAIN] 程序结束");
     }
 }
 
