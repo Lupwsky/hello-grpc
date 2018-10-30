@@ -23,7 +23,7 @@ public class IOMain {
         // capacity: 缓冲区的容量, 这个值一旦被确定后不允许被改变
 
         CharBuffer buffer = CharBuffer.allocate(100);
-        buffer.put('A').put('B').put('C');
+        buffer.put('A').put('B').put('C').flip();
         String result = buffer.toString();
         log.info("[MAIN] result = {}", result);
     }
