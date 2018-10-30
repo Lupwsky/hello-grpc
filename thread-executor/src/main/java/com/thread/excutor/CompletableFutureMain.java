@@ -3,14 +3,13 @@ package com.thread.excutor;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 
-import java.util.*;
 import java.util.concurrent.*;
 
 /**
  * @author v_pwlu 2018/10/11
  */
 @Slf4j
-public class FutureMain {
+public class CompletableFutureMain {
 
     public static class DelayTask implements Callable<String> {
 
@@ -34,7 +33,7 @@ public class FutureMain {
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             e.printStackTrace();
         }
-
+        
         DateTime endTime = DateTime.now();
         log.info("[Future 测试] 总耗时 = {}ms", endTime.getMillis() - startTime.getMillis());
 
