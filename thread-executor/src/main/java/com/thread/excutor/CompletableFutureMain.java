@@ -31,31 +31,3 @@ public class CompletableFutureMain {
         }
     }
 }
-
-
-//log.info("[MAIN] threadName = {}, TAG-1", Thread.currentThread().getName());
-//        CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> {
-//        try {
-//        log.info("[MAIN] threadName = {}, FUTURE-1", Thread.currentThread().getName());
-//        Thread.sleep(2000);
-//        log.info("[MAIN] threadName = {}, FUTURE-1 2s 过去了...", Thread.currentThread().getName());
-//        } catch (InterruptedException e) {
-//        e.printStackTrace();
-//        }
-//        return 100;
-//        });
-//
-//        log.info("[MAIN] threadName = {}, TAG-2", Thread.currentThread().getName());
-//        String str = future.thenApply((result) -> {
-//        try {
-//        log.info("[MAIN] threadName = {}, FUTURE-2", Thread.currentThread().getName());
-//        Thread.sleep(1000);
-//        log.info("[MAIN] threadName = {}, FUTURE-2 1s 过去了...", Thread.currentThread().getName());
-//        } catch (InterruptedException e) {
-//        e.printStackTrace();
-//        }
-//        return String.valueOf(result) + "1";
-//        }).join();
-//
-//        log.info("[MAIN] threadName = {}, TAG-3", Thread.currentThread().getName());
-//        log.info("[MAIN] threadName = {}, result = {}", Thread.currentThread().getName(), str);
