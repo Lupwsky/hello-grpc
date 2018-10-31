@@ -22,7 +22,6 @@ public class SocketServerMain {
             log.info("[服务端]");
             serverSocket =new ServerSocket(8989);
 
-            //
             Socket socket = serverSocket.accept();
 
             BufferedReader bufferedReader =new BufferedReader(new InputStreamReader(socket.getInputStream()));
