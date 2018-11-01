@@ -60,23 +60,72 @@ public class NetworkInterfaceMain {
         // 通过 hostName 获取地址信息
         String hostName = "www.baidu.com";
         try {
-            String ipVersion = "NONE";
             List<String> addressList  = new ArrayList<>();
             InetAddress[] inetAddressList = InetAddress.getAllByName(hostName);
             for (InetAddress inetAddress : inetAddressList) {
-                if (inetAddress instanceof Inet4Address) {
-                    ipVersion = "v4";
-                } else if(inetAddress instanceof Inet6Address) {
-                    ipVersion = "v6";
-                } else {
-                    ipVersion = "NONE";
-                }
                 addressList.add(inetAddress.getHostAddress());
             }
-            log.info("[获取IP信息] ipVersion = {}, hostName = {}, address = {}",
-                    ipVersion, hostName, addressList.toString());
+            log.info("[获取IP信息] hostName = {}, address = {}", hostName, addressList.toString());
         } catch (UnknownHostException e) {
             e.printStackTrace();
+        }
+
+        // 在大多数机器上都可以取到本机 IP, 多网卡时获取就会出现问题
+        try {
+            log.info("[获取IP信息] IP = {}", InetAddress.getLocalHost().getHostAddress());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
+        // 多网卡时可以获取本机 IP, 但是如果对虚拟网卡会获取到虚拟网卡, 可能不能获取到正确的 IP
+        try {
+            log.info("[获取IP信息] IP = {}", getLocalHostLANAddress());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * https://www.cnblogs.com/starcrm/p/7071227.html
+     *
+     * @return
+     * @throws UnknownHostException
+     */
+    private static InetAddress getLocalHostLANAddress() throws UnknownHostException {
+        try {
+            InetAddress candidateAddress = null;
+            // 遍历所有的网络接口
+            for (Enumeration ifaces = NetworkInterface.getNetworkInterfaces(); ifaces.hasMoreElements();) {
+                NetworkInterface iface = (NetworkInterface) ifaces.nextElement();
+                // 在所有的接口下再遍历IP
+                for (Enumeration inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements();) {
+                    InetAddress inetAddr = (InetAddress) inetAddrs.nextElement();
+                    if (!inetAddr.isLoopbackAddress()) {// 排除loopback类型地址
+                        if (inetAddr.isSiteLocalAddress()) {
+                            // 如果是site-local地址，就是它了
+                            return inetAddr;
+                        } else if (candidateAddress == null) {
+                            // site-local类型的地址未被发现，先记录候选地址
+                            candidateAddress = inetAddr;
+                        }
+                    }
+                }
+            }
+            if (candidateAddress != null) {
+                return candidateAddress;
+            }
+            // 如果没有发现 non-loopback地址.只能用最次选的方案
+            InetAddress jdkSuppliedAddress = InetAddress.getLocalHost();
+            if (jdkSuppliedAddress == null) {
+                throw new UnknownHostException("The JDK InetAddress.getLocalHost() method unexpectedly returned null.");
+            }
+            return jdkSuppliedAddress;
+        } catch (Exception e) {
+            UnknownHostException unknownHostException = new UnknownHostException(
+                    "Failed to determine LAN address: " + e);
+            unknownHostException.initCause(e);
+            throw unknownHostException;
         }
     }
 }
