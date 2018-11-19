@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UserList>
+    <User myAttribute="1">
+        <name>lupengwei0</name>
+        <age>15</age>
+        <sex>男</sex>
+    </User>
+
+    <User myAttribute="2">
+        <name>lupengwei1</name>
+        <age>16</age>
+        <sex>男</sex>
+    </User>
+
+    <User myAttribute="3">
+        <name>lupengwei2</name>
+        <age>17</age>
+        <sex>男</sex>
+    </User>
+</UserList>
