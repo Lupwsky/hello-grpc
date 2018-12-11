@@ -25,9 +25,6 @@ import java.util.*;
 public class SpringMain {
 
     public static void main(String[] args) {
-//        ApplicationContext context = new ClassPathXmlApplicationContext("beans/UserBeans.xml");
-//        UserInfo userInfo = (UserInfo) context.getBean("userInfo");
-
         XmlBeanFactory beanFactory = new XmlBeanFactory(new ClassPathResource("beans/UserBeans.xml"));
         UserInfo userInfo = (UserInfo) beanFactory.getBean("userInfo");
         log.info("[测试1] result1 = {}", userInfo);
