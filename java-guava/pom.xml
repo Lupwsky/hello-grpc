@@ -1,34 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>guava</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>guava</name>
+    <description>guava</description>
+
     <parent>
         <artifactId>hello-grpc</artifactId>
         <groupId>com.lupw</groupId>
         <version>1.0</version>
     </parent>
 
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>com.netflix</groupId>
-    <artifactId>ribbon</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
-    <name>netflix-ribbon-client</name>
-    <description>Demo project for Spring Boot</description>
-
     <properties>
 
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>com.netflix.ribbon</groupId>
-            <artifactId>ribbon-httpclient</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
@@ -39,6 +29,5 @@
             </plugin>
         </plugins>
     </build>
-
 
 </project>

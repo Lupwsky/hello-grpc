@@ -25,6 +25,7 @@
         <module>thread-executor</module>
         <module>socket-server</module>
         <module>socket-client</module>
+        <module>java-guava</module>
     </modules>
 
 
