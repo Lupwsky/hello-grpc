@@ -101,7 +101,8 @@ public class NetworkInterfaceMain {
                 // 在所有的接口下再遍历IP
                 for (Enumeration inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements();) {
                     InetAddress inetAddr = (InetAddress) inetAddrs.nextElement();
-                    if (!inetAddr.isLoopbackAddress()) {// 排除loopback类型地址
+                    // 排除loopback类型地址
+                    if (!inetAddr.isLoopbackAddress()) {
                         if (inetAddr.isSiteLocalAddress()) {
                             // 如果是site-local地址，就是它了
                             return inetAddr;
@@ -122,8 +123,7 @@ public class NetworkInterfaceMain {
             }
             return jdkSuppliedAddress;
         } catch (Exception e) {
-            UnknownHostException unknownHostException = new UnknownHostException(
-                    "Failed to determine LAN address: " + e);
+            UnknownHostException unknownHostException = new UnknownHostException("Failed to determine LAN address: " + e);
             unknownHostException.initCause(e);
             throw unknownHostException;
         }
