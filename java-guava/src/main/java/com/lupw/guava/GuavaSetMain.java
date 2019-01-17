@@ -73,16 +73,10 @@ public class GuavaSetMain {
         // LinkedHashMap -> LinkedHashMultiset
         // LinkedHashMultiset -> ConcurrentHashMultiset
         // ImmutableMap -> ImmutableMultiset
-
-
-        // 值得一提的是在 JDK 8 中, Map 也开始支持计数的功能了, 和 Guava 提供的 MultiSet 对应关系如下
-        // Map.put(E e, int count) -> MultiSet.add(E e, int count)
-        // Map.remove(E e, int count) -> MultiSet.remove(E e, int count)
-        // Map.replace(E e, int count) -> MultiSet.setCount(E e, int count)
     }
 
 
-    public static void multimapTest() {
+    private static void multimapTest() {
         // 想 Map<String, List<Object>> ObjectMap = new HashMap<>>() 这样的数据结构,
         // 在使用的时候需要检查 key 是否存在, 不存在时则创建一个, 存在时在List后面添加上一个, 这样的过程是比较繁琐的
         // 使用实例, 略, 后面补上
