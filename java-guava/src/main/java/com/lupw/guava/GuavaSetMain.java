@@ -6,8 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 
+/**
+ * @author v_pwlu
+ */
 @Slf4j
-public class GuavaMain {
+public class GuavaSetMain {
 
     public static void main(String[] args) {
         // Guava 添加了一些新的集合类型
@@ -76,13 +79,6 @@ public class GuavaMain {
         // Map.put(E e, int count) -> MultiSet.add(E e, int count)
         // Map.remove(E e, int count) -> MultiSet.remove(E e, int count)
         // Map.replace(E e, int count) -> MultiSet.setCount(E e, int count)
-
-
-    }
-
-
-    public static void sortedMultisetTest() {
-
     }
 
 
@@ -111,5 +107,32 @@ public class GuavaMain {
         // TreeMultimap
         // ImmutableListMultimap
         // ImmutableSetMultimap
+    }
+
+
+    public static void immutableMulitSetTest() {
+        // Guava 不可变集合
+        ImmutableMultiset<String> immutableMultiset = ImmutableMultiset.of("1", "2", "2", "3", "4");
+        immutableMultiset.forEach(log::info);
+
+        // JDK 可变集合, 不会出现重复的元素
+        Set<String> set = new HashSet<>();
+        set.add("1");
+        set.add("2");
+        set.add("2");
+        set.add("3");
+        set.add("4");
+
+        // Collections.unmodifiableSet() 方法将原集合包装为不可变集合
+        Set<String> unmodifiableSet = Collections.unmodifiableSet(set);
+        unmodifiableSet.forEach(log::info);
+
+        // JDK 不可变集合对原集合的引用进行修改, 仍然可以更改元素, 这钟不可变需要保证原始集合没有人引用
+        set.add("6");
+        unmodifiableSet.forEach(log::info);
+
+        // JDK 不可变集合虽然可以调用 add 方法, 但是会出现 UnsupportedOperationException 异常
+        unmodifiableSet.add("7");
+        unmodifiableSet.forEach(log::info);
     }
 }
