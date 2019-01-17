@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GuavaClassToInstanceMapMain {
 
     public static void main(String[] args) {
-
+        classToInstanceMapTest();
     }
 
 
