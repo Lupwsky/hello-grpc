@@ -1,4 +1,4 @@
-package com.lupw.guava;
+package com.lupw.guava.cache;
 
 import com.google.common.cache.*;
 import com.google.common.collect.ImmutableMap;

@@ -1,4 +1,4 @@
-package com.lupw.guava;
+package com.lupw.guava.set;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
