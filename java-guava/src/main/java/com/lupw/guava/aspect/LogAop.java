@@ -78,11 +78,13 @@ public class LogAop {
     }
 
 
+
     @Around(value = "aopAnnotation()")
     public Object around(ProceedingJoinPoint point) {
+        // @Around("execution(* com.lupw.guava.controller.*(..))")
         Object[] args = point.getArgs();
         try {
-            // 获取返回方法返回值
+            // 获取返回方法返回值, 这里可以对 args 进行修改后再用新的值调用方法
             Object returnValue = point.proceed(args);
         } catch (Throwable throwable) {
             throwable.printStackTrace();
