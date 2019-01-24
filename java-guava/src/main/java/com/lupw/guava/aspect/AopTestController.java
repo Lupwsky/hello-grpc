@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class AopTestController {
 
     @PostMapping(value = "/aop/test")
-    @AopAnnotation
+    @AopAnnotation(value = "A")
+    @AopAnnotation(value = "B")
     public void test(String name, String userId) {
         log.info("[aopTest] name = {}, userId = {}", name, userId);
     }

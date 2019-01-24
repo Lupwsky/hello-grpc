@@ -44,6 +44,7 @@ public class ReflectionMain {
             log.info("[REFLECTION] modifiersIsPrivate = {}", Modifier.isPrivate(field.getModifiers()));
             log.info("[REFLECTION] modifiersIsStatic = {}", Modifier.isPrivate(field.getModifiers()));
 
+
             // 返回当前类 (不包括父类) 声明所有字段, private 和 public 都会返回
             Field[] declaredFields = clazz.getDeclaredFields();
             Arrays.stream(declaredFields).forEach(declaredField -> {
