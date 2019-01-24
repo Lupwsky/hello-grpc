@@ -77,6 +77,7 @@ public class LogAop {
 
     @Around(value = "aopAnnotation()")
     public Object around(ProceedingJoinPoint point) {
+        // 在 Before 之前, 并在 After 之后执行
         // @Around("execution(* com.lupw.guava.controller.*(..))")
         Object[] args = point.getArgs();
         try {
