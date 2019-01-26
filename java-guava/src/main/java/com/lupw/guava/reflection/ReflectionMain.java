@@ -57,11 +57,10 @@ public class ReflectionMain {
                 log.info("[REFLECTION] name = {}", tempField.getName());
             });
 
-            // 获取方法和参数
+            // 获取方法和参数名
             Method method = clazz.getMethod("func1", String.class, String.class);
             Parameter[] parameter = method.getParameters();
             log.info("[REFLECTION] parameter0 = {}, parameter1 = {}", parameter[0].getName(), parameter[1].getName());
-
 
         } catch (ClassNotFoundException | NoSuchFieldException | NoSuchMethodException e) {
             e.printStackTrace();
