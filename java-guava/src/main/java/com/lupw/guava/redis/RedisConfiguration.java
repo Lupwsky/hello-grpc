@@ -17,18 +17,6 @@ public class RedisConfiguration {
 
     @Bean
     public RedisClient getRedisClient() {
-        return RedisClient.create("redis://lupengwei.4585@10.98.164.156:6380/0?timeout=10s");
-    }
-
-
-    @Bean
-    RedisCommands<String, String> getStringSyncRedisCommands(RedisClient redisClient) {
-        return redisClient.connect().sync();
-    }
-
-
-    @Bean
-    StatefulRedisPubSubConnection<String, String> getStatefulRedisPubSubConnection(RedisClient redisClient) {
-        return redisClient.connectPubSub();
+        return RedisClient.create("redis://lupengwei.4585@127.0.0.1:6379/0?timeout=10s");
     }
 }

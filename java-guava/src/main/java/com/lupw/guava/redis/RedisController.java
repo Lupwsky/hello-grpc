@@ -23,6 +23,6 @@ public class RedisController {
 
     @GetMapping(value = "/redis/test")
     public void redisDistributedServiceTest() {
-        redisService.lettuceRedisTest();
+        redisService.lettuceRedisSubscriber();
     }
 }
