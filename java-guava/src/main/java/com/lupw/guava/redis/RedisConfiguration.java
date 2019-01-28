@@ -14,8 +14,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RedisConfiguration {
 
-
-    @Bean
+    @Bean(destroyMethod = "shutdown")
     public RedisClient getRedisClient() {
         return RedisClient.create("redis://lupengwei.4585@127.0.0.1:6379/0?timeout=10s");
     }
