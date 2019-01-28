@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author v_pwlu 2019/1/28
@@ -50,5 +52,20 @@ public class Db0DataSourceConfig {
         dataSource.setMaxActive(properties.getMaxActive());
         dataSource.setMaxWait(properties.getMaxWait());
         return dataSource;
+    }
+
+
+    @Bean
+    public MultiRoutingDataSource dataSource(@Qualifier("db0") DataSource dataSource) {
+        Map<Object, Object> targetDataSources = new HashMap<>();
+        targetDataSources.put("primaryDataSource", dataSource);
+
+        MultiRoutingDataSource multiRoutingDataSource = new MultiRoutingDataSource();
+        // 设置数据源映射
+        multiRoutingDataSource.setTargetDataSources(targetDataSources);
+        // 设置默认数据源，当无法映射到数据源时会使用默认数据源
+        // 默认数据源 dataSource.setDefaultTargetDataSource(primaryDataSource)
+        multiRoutingDataSource.afterPropertiesSet();
+        return multiRoutingDataSource;
     }
 }
