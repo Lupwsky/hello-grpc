@@ -6,9 +6,11 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author v_pwlu 2019/1/28
+ *
+ * 在 Component 里面指定 beanName, 默认的 beanName 是 db0DataSourceProperties
  */
 @Data
-@Component
+@Component(value = "db0DataSourceProperties")
 @ConfigurationProperties(prefix = "spring.datasource.db0")
 public class Db0DataSourceProperties {
 

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * @author v_pwlu 2019/1/28
  */
 @Data
-@Component
+@Component(value = "db1DataSourceProperties")
 @ConfigurationProperties(prefix = "spring.datasource.db1")
 public class Db1DataSourceProperties {
 

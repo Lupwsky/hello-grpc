@@ -17,38 +17,29 @@ import javax.sql.DataSource;
  * @author v_pwlu 2019/1/28
  */
 @Configuration
-@EnableConfigurationProperties(Db2DataSourceProperties.class)
 @MapperScan(basePackages = "com.lupw.guava.datasource.db2.mapper", sqlSessionFactoryRef = "db2Factory")
 public class Db2DataSourceConfig {
 
-    private final Db0DataSourceProperties properties;
-
-    @Autowired
-    public Db2DataSourceConfig(Db0DataSourceProperties properties) {
-        this.properties = properties;
-    }
-
-
     @Bean(name = "db2Factory")
-    public SqlSessionFactory getSingleDataSourceFactory(@Qualifier("db2") DataSource dataSource) throws Exception {
+    public SqlSessionFactory getDataSourceFactory(@Qualifier("db2") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
         sessionFactoryBean.setDataSource(dataSource);
-        sessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/db2/*.xml"));
+        sessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:db2/*.xml"));
         return sessionFactoryBean.getObject();
     }
 
 
     @Bean(name = "db2")
-    public DataSource getSingleDataSource() {
+    public DataSource getDataSource(Db2DataSourceProperties db2DataSourceProperties) {
         DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setDriverClassName(properties.getDriverClass());
-        dataSource.setUrl(properties.getUrl());
-        dataSource.setUsername(properties.getUsername());
-        dataSource.setPassword(properties.getPassword());
-        dataSource.setInitialSize(properties.getInitialSize());
-        dataSource.setMinIdle(properties.getMinIdle());
-        dataSource.setMaxActive(properties.getMaxActive());
-        dataSource.setMaxWait(properties.getMaxWait());
+        dataSource.setDriverClassName(db2DataSourceProperties.getDriverClass());
+        dataSource.setUrl(db2DataSourceProperties.getUrl());
+        dataSource.setUsername(db2DataSourceProperties.getUsername());
+        dataSource.setPassword(db2DataSourceProperties.getPassword());
+        dataSource.setInitialSize(db2DataSourceProperties.getInitialSize());
+        dataSource.setMinIdle(db2DataSourceProperties.getMinIdle());
+        dataSource.setMaxActive(db2DataSourceProperties.getMaxActive());
+        dataSource.setMaxWait(db2DataSourceProperties.getMaxWait());
         return dataSource;
     }
 }
