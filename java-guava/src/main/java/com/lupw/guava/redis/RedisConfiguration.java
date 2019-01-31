@@ -1,8 +1,6 @@
 package com.lupw.guava.redis;
 
 import io.lettuce.core.RedisClient;
-import io.lettuce.core.api.sync.RedisCommands;
-import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

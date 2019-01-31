@@ -11,33 +11,23 @@ import javax.sql.DataSource;
 @Slf4j
 public class MultiRoutingDataSourceContext {
 
-    private final static ThreadLocal<String> DATA_SOURCE_BEAN_NAME = new ThreadLocal<>();
+    private final static ThreadLocal<String> DB_KEY = new ThreadLocal<>();
 
     private MultiRoutingDataSourceContext() {
     }
 
 
-    public static String getCurrentDataSourceBeanName() {
-        String tenant = DATA_SOURCE_BEAN_NAME.get();
-        if (StringUtils.isEmpty(tenant)) {
-            log.error("dataSourceName 为空 ");
-        }
-        return tenant;
+    public static String getCurrentDbKey() {
+        return DB_KEY.get();
     }
 
 
-    public static void setCurrentDataSourceBeanName(String tenant) {
-        DATA_SOURCE_BEAN_NAME.set(tenant);
+    public static void setCurrentDbKey(String tenant) {
+        DB_KEY.set(tenant);
     }
 
 
     public static void clear() {
-        DATA_SOURCE_BEAN_NAME.remove();
-    }
-
-
-    public static DataSource getDataSource() {
-        String currentDataSourceBeanName = getCurrentDataSourceBeanName();
-        return ApplicationContextUtil.context.getBean(currentDataSourceBeanName, DataSource.class);
+        DB_KEY.remove();
     }
 }

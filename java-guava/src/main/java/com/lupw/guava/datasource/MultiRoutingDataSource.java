@@ -1,10 +1,13 @@
 package com.lupw.guava.datasource;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
+import org.springframework.util.StringUtils;
 
 /**
  * @author v_pwlu 2019/1/28
  */
+@Slf4j
 public class MultiRoutingDataSource extends AbstractRoutingDataSource {
 
     /**
@@ -14,10 +17,15 @@ public class MultiRoutingDataSource extends AbstractRoutingDataSource {
      */
     @Override
     protected Object determineCurrentLookupKey() {
-        // 会自动的根据名字获取 DataSource 类型的的 Bean, 并切换数据源
-        return MultiRoutingDataSourceContext.getCurrentDataSourceBeanName();
+        String currentDbKey = MultiRoutingDataSourceContext.getCurrentDbKey();
+        if (StringUtils.isEmpty(currentDbKey)) {
+            log.error("当前数据源为空, 使用默认的数据源");
+        } else {
+            log.info("当前数据源 = {}, 使用默认的数据源", currentDbKey);
+        }
+        return currentDbKey;
 
-        // 或者直接返回 DataSource
+        // 也可以直接返回 DataSource 对象
         // return MultiRoutingDataSourceContext.getDataSource();
 
         // 见源码, 如果是 DataSource 对象就直接返回, 如果不是就通过 key 值去容器里获取对应的 DataSource 类型的 Bean
