@@ -26,7 +26,7 @@ public class TestController {
     }
 
 
-    @GetMapping(value = "/test")
+    @GetMapping(value = "/properties/test")
     public void test() {
         log.info("{}", JSONObject.toJSONString(multiProperties.getCrmProperties()));
         log.info("[--]");
