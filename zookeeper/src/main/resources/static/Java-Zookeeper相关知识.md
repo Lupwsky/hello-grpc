@@ -91,3 +91,4 @@ Znode 的有以下模式, 且节点的类型模式在创建的时候就被创建
 * [ZooKeeper 实战](https://segmentfault.com/a/1190000012185452)
 * [可能是全网把 ZooKeeper 概念讲的最清楚的一篇文章](https://segmentfault.com/a/1190000016349824)
 * [Zookeeper 客户端 Curator 使用详解](http://throwable.coding.me/2018/12/16/zookeeper-curator-usage)
+* [阿里中间件团队博客 Zookeeper FAQ](http://jm.taobao.org/2013/10/07/zookeeper-faq/)
