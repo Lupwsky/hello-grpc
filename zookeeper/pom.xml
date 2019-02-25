@@ -29,6 +29,14 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>apache-curator</artifactId>
+            <version>4.0.1</version>
+            <type>pom</type>
+        </dependency>
+
     </dependencies>
 
     <build>

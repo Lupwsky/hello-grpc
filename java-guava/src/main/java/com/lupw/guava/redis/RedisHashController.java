@@ -43,9 +43,9 @@ public class RedisHashController {
         // ## HSET
         // HSET key field value
         // 成功设置返回 1, 已经存在并且覆盖旧值返回0, 失败返回错误
-        redisCommands.hset(key, "name", "lpw");
-        redisCommands.hset(key, "age", "18");
-        redisCommands.hset(key, "sex", "男");
+        redisCommands.hset("user:TF001", "name", "lpw");
+        redisCommands.hset("user:TF001", "age", "18");
+        redisCommands.hset("user:TF001", "sex", "男");
 
         // ## HSETNX
         // HSETNX key field value
@@ -60,18 +60,18 @@ public class RedisHashController {
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("name", "LPW");
         hashMap.put("age", "20");
-        String hmsetResult = redisCommands.hmset(key, hashMap);
+        String hmsetResult = redisCommands.hmset("user:TF001", hashMap);
         log.info("hmsetResult = {}", hmsetResult);
 
         // ## HGET
         // HGET hash field
         // 返回 Hash 表中指定 field 的 value, 对于不存在的 field 返回 null
-        redisCommands.hget(key, "name");
+        redisCommands.hget("user:TF001", "name");
 
         // ## HMGET
         // HMGET key field [field …]
         // 批量获取 Hash 表指定的字段
-        List<KeyValue<String, String>> keyValueList = redisCommands.hmget(key, "name", "age", "none");
+        List<KeyValue<String, String>> keyValueList = redisCommands.hmget("user:TF001", "name", "age", "none");
         KeyValue<String, String> keyValue = keyValueList.get(0);
         log.info("key = {}, value = {}", keyValue.getKey(), keyValue.getValue());
         keyValue = keyValueList.get(2);
@@ -80,47 +80,47 @@ public class RedisHashController {
         // ## HGETALL
         // HGETALL key
         // 返回 key 对应 Hash 表中所有的键值对
-        Map<String, String> resultMap = redisCommands.hgetall(key);
+        Map<String, String> resultMap = redisCommands.hgetall("user:TF001");
         log.info("hset = {}", resultMap.toString());
 
         // ## HEXISTS
         // HEXISTS key field
         // 检测 key 对应的 Hash 表中 field 是否存在, 存在返回 1, 不存在返回 0
-        redisCommands.hexists(key, "name");
+        redisCommands.hexists("user:TF001", "name");
 
         // ## HDEL
         // HDEL key field [field …]
         // 删除 key 对应的 Hash 表中对应的 field, 返回成功删除的数量
-        redisCommands.hdel(key, "name");
-        redisCommands.hset(key, "name", "lpw");
+        redisCommands.hdel("user:TF001", "name");
+        redisCommands.hset("user:TF001", "name", "lpw");
 
         // ## HKEYS
         // HKEYS key
         // 返回 key 对应的 Hash 表中所有的 field, 没有任何 field 或者 key 不存在返回一个空表
-        List<String> keyList = redisCommands.hkeys(key);
+        List<String> keyList = redisCommands.hkeys("user:TF001");
         log.info("keyList = {}", keyList.toString());
 
         // ## HVALS
         // HVALS key
         // // 返回 key 对应的 Hash 表中所有的值, 没有任何 field 或者 key 不存在返回一个空表
-        List<String> valueList = redisCommands.hvals(key);
+        List<String> valueList = redisCommands.hvals("user:TF001");
         log.info("valueList = {}", valueList.toString());
 
         // ## HLEN
         // HLEN key
         // key 对应的 Hash 表中 field 的数量
-        redisCommands.hlen(key);
+        redisCommands.hlen("user:TF001");
 
         // ## HSTRLEN
         // HSTRLEN key field
         // 返回 key 对应的 Hash 表中所有的 field 对应值的字符串长度
-        redisCommands.hstrlen(key, "name");
+        redisCommands.hstrlen("user:TF001", "name");
 
         // ## HINCRBY 和 HINCRBYFLOAT
         // HINCRBY key field increment - 加减整型数据
         // HINCRBYFLOAT key field increment - 加减浮点型数据
         // key 对应的 Hash 表中 field 的字段做加减操作, 如果 filed 对应的值如果是字符串, 会出现错误
-        redisCommands.hincrby(key, "age", 2);
+        redisCommands.hincrby("user:TF001", "age", 2);
     }
 }
 
