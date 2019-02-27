@@ -17,6 +17,9 @@ public class DelayQueueMain {
     // * 只有在延迟期满的时候才能从中获取到元素, 放在队列头部的是延迟期满后保存时间最长的 Delayed 元素
     // * 如果延迟都还没有期满, 则队列没有头部, poll 将返回 null
 
+    // DelayQueue 使用场景
+    // DelayQueue 可以用来实现延迟消息, 生产/消费队列, 如果不考虑分布式队列, 队列中的数据持久化, 消息可靠性问题 (虽然可以自己实现重试机制解决一定的问题), DelayQueue 就可以满足要求
+
     // 放入 DelayQueue 的元素需要继承 Delayed 接口, Delayed扩展了 Comparable 接口, 用于比较延时的时间值
     // 见 DelayQueueItem
 
