@@ -151,9 +151,11 @@ public class RedisLock {
         try {
             StatefulRedisConnection<String, String> connection = redisClient.connect();
             RedisCommands<String, String> redisCommands = connection.sync();
-            String scriptTemplate = "if redis.call('get', '%s') == '%s' then return redis.call('del', '%s') else return 0 end";
-            String script = String.format(scriptTemplate, lockKey, lockValue, lockKey);
-            long result = redisCommands.eval(script, ScriptOutputType.INTEGER);
+            // String scriptTemplate = "if redis.call('get', '%s') == '%s' then return redis.call('del', '%s') else return 0 end";
+            // String script = String.format(scriptTemplate, lockKey, lockValue, lockKey);
+            //long result = redisCommands.eval(script, ScriptOutputType.INTEGER);
+            String scriptTemplate = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+            long result = redisCommands.eval(scriptTemplate, ScriptOutputType.INTEGER, new String[]{lockKey}, lockValue);
             return result == 1;
         } catch (Exception e) {
             log.error("释放锁错误, error = {}", e);

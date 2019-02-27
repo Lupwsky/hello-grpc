@@ -1,4 +1,4 @@
-package com.lupw.guava.queue.delay_queue;
+package com.lupw.guava.queue;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

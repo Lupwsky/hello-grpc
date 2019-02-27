@@ -1,13 +1,11 @@
 package com.lupw.guava.queue.delay_queue;
 
+import com.lupw.guava.queue.UserInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.temporal.ChronoField;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
