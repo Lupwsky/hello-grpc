@@ -56,9 +56,91 @@ public void redisDelayQueueTest() {
 1. 没有重试机制 - 处理消息出现异常没有重试机制, 这些需要自己去实现, 包括重试次数的实现等
 2. 没有 ACK 机制 - 例如在获取消息并已经删除了消息情况下, 正在处理消息的时候客户端崩溃了, 这条正在处理的这些消息就会丢失, MQ 是需要明确的返回一个值给 MQ 才会认为这个消息是被正确的消费了
 
-# 使用调用 Lua 脚本实现
+# 使用调用 Lua 脚本进一步优化
 
+上面的实现中, 不论是哪一个线程最终处理了消息 A (假设获取到的消息为 A), 在并发情况下其他线程获取到的消息 A 都是无效的消息 (因为此时消息 A 已经消费和再队列中删除) 了, 但是这些线程需要执行 zrem 指令才知道消息 A 已经被其他线程获取, 不需要处理消息 A 了, 如果能有办法一次性知道这个消息 A 已经被其他线程获取, 没有获取到消息 A 的线程就不需要再一次执行 zrem 指令了, 优化方法就是使用 Lua 脚本将 zrangebyscore 和 zrem 组合使用进行原子化操作, 这样可以避免在其中一个线程获取到了消息 A 后, 其他线程肯定不会获取到消息 A, 这些线程也不需要再次执行 zrem 来确定是不是一条无效的消息了, 具体实现如下:
 
+Lua 脚本, 如果有超时的消息, 就删除, 并返回这条消息, 否则返回空字符串:
+
+```lua
+local resultArray = redis.call('zrangebyscore', KEYS[1], ARGV[1], ARGV[2], 'limit' , ARGV[3], ARGV[4])
+if #resultArray > 0 then
+    if redis.call('zrem', KEYS[1], resultArray[1]) > 0 then
+        return resultArray[1]
+    else
+        return ''
+    end
+else
+    return ''
+end
+```
+
+实现代码如下:
+
+```java
+public void redisDelayQueueTest() {
+    StatefulRedisConnection<String, String> connection = redisClient.connect();
+    RedisCommands<String, String> redisCommands = connection.sync();
+
+    String key = "delay_queue";
+    // 实际开发建议使用业务 ID 和随机生成的唯一 ID 作为 value, 随机生成的唯一 ID 可以保证消息的唯一性, 业务 ID 可以避免 value 携带的信息过多
+    String value1 = JSONObject.toJSONString(UserInfo.builder().username("lpw1").password("123").build());
+    String value2 = JSONObject.toJSONString(UserInfo.builder().username("lpw2").password("123").build());
+    String value3 = JSONObject.toJSONString(UserInfo.builder().username("lpw3").password("123").build());
+    redisCommands.zadd(key, ScoredValue.from(DateTime.now().getMillis() + 1000 * 3, Optional.ofNullable(value1)));
+    redisCommands.zadd(key, ScoredValue.from(DateTime.now().getMillis() + 1000 * 5, Optional.ofNullable(value2)));
+    redisCommands.zadd(key, ScoredValue.from(DateTime.now().getMillis() + 1000 * 7, Optional.ofNullable(value3)));
+    
+    String luaScript = "local resultArray = redis.call('zrangebyscore', KEYS[1], ARGV[1], ARGV[2], 'limit' , ARGV[3], ARGV[4])\n" +
+            "if #resultArray > 0 then\n" +
+            "    if redis.call('zrem', KEYS[1], resultArray[1]) > 0 then\n" +
+            "        return resultArray[1]\n" +
+            "    else\n" +
+            "        return ''\n" +
+            "    end\n" +
+            "else\n" +
+            "    return ''\n" +
+            "end";
+
+    new Thread() {
+        @Override
+        public void run() {
+            while (true) {
+                String value = redisCommands.eval(luaScript, ScriptOutputType.VALUE, new String[]{key}, "0", String.valueOf(DateTime.now().getMillis()), "0", "1");
+                log.info("value = {}", value);
+
+                if (value == null || Objects.equals("", value)) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        break;
+                    }
+                } else {
+                    // TODO 开始业务处理
+                }
+            }
+        }
+    }.start();
+}
+```
+
+```java
+// 有些参数是固定的, Lua 脚本可以直接更改为如下, 调用的时候可以少传三个参数
+String luaScript1 = "local resultArray = redis.call('zrangebyscore', KEYS[1], 0, ARGV[1], 'limit' , 0, 1)\n" +
+        "if #resultArray > 0 then\n" +
+        "    if redis.call('zrem', KEYS[1], resultArray[1]) > 0 then\n" +
+        "        return resultArray[1]\n" +
+        "    else\n" +
+        "        return ''\n" +
+        "    end\n" +
+        "else\n" +
+        "    return ''\n" +
+        "end";
+
+// 调用的时候少传三个参数
+redisCommands.eval(luaScript, ScriptOutputType.VALUE, new String[]{key}, String.valueOf(DateTime.now().getMillis()));
+```
 
 # 参考资料
 
