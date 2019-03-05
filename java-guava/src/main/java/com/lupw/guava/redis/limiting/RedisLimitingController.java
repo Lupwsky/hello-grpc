@@ -27,6 +27,18 @@ public class RedisLimitingController {
         this.redisClient = redisClient;
     }
 
+    // # 为什么需要限流
+    // 在大数据量高并发访问时, 经常会出现服务或接口面对大量请求而不可用的情况, 甚至引发连锁反映导致整个系统崩溃,
+    // 限流的技术手段可以很好的应对这种情况, 当请求达到一定的并发数或速率, 就进行等待, 排队, 降级, 拒绝服务等策略,
+    // 虽然会影响到用户的体验, 但是可以有效的保证系统不崩溃
+
+    // # 限流常见算法
+    // 常见的限流算法有, 令牌桶, 漏斗和计数器算法
+
+    // # 令牌桶
+    //
+
+    // Redis 基于时间窗口实现的简单限流
 
     @GetMapping(value = "/redis/limiting/test")
     public Boolean redisLimitingTest() {
