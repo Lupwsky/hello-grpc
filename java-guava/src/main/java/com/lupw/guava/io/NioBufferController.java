@@ -18,12 +18,13 @@ public class NioBufferController {
         bufferTest4();
     }
 
-    // # NIO 中的缓存类
+    // # NIO 中的缓存类 API 使用
     // 和传统 I/O 只能在处理 byte 和 char 型数据, NIO 支持多种类型的数据 (底层还是 byte 字节来处理), NIO 使用 Buffer 类处理不同的的数据类型
     // Buffer 是一个抽象类, 有 7 个直接的之类
     // ByteBuffer, CharBuffer, DoubleBuffer, FloatBuffer, IntBuffer, LongBuffer, ShortBuffer
     // 注意这 7 个类也是抽象类, 不能直接实例化, 但是这些类都提供了一个 wrap 方法将数据放入缓存中, 并获取实例
-    // 如: ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[]{'1', '2', '3', '4', '5'});
+    // 实例化方法一, 使用已经存在的数组: ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[]{'1', '2', '3', '4', '5'});
+    // 实例化方法二, 使用 allocate 方法: ByteBuffer byteBuffer = ByteBuffer.allocate(10);
 
     // # Buffer 类中的的方法
     // 先来看看 Buffer 中的方法, 如下图表所示:
@@ -51,6 +52,7 @@ public class NioBufferController {
 
     // # limit() 和 limit(int)
     // 获取 limit 的大小和重新设置 limit 值
+    // 注意由于 limit 的值是可以动态设置的, 如果新设置的 limit 的值小于当前 position 的值, 此时会将 position 的值设置为新的 limit 值
 
     public void bufferTest2() {
         CharBuffer charBuffer = CharBuffer.wrap(new char[]{'a', 'b', 'c', 'd'});
@@ -97,7 +99,7 @@ public class NioBufferController {
     // # mark()
     // mark(int) 方法用于在缓冲区中设置标记, 常和 reset() 方法配合使用, 调用 reset() 后会将 mark 值存入 position 中
     // 注意 mark 的值默认是 -1, 如果没有设置 mark 的值, 调用 reset() 方法会报错, 不能将 -1 值设置给 position
-    // 注意由于 position 和 limit 的值可以被动态调整, 如果已经设置了 mark 值, 在调整 limit 或者 position 值后如果小于 mark 值, mark 值将会被自定抛弃并重置为 -1
+    // 注意由于 position 和 limit 的值可以被动态调整, 如果已经设置了 mark 值, 在调整 limit 或者 position 值后如果小于 mark 值, mark 值将会被自定抛弃并重置为 -1=
     // 注意 mark 的值在 API 中被设计为不可能设置为大于 position, mark 被设计成像是探险时设置的路标, 目的是方便返回时找到回去的路, 你不可能在你没到达某个目的地前就能在这个目的地设置一个路标
 
     public void bufferTest4() {
@@ -125,5 +127,43 @@ public class NioBufferController {
         charBuffer.mark();
         charBuffer.put("C");
         log.info("charBuffer = {}, {}, {}, {}", charBuffer.get(0), charBuffer.get(1), charBuffer.get(2), charBuffer.get(3));
+    }
+
+    // remaining()
+    // 返回剩余可读或者可写的空间, 他的值等于 limit - position
+
+    // # isReadOnly()
+    // 是否时只读的缓存区
+
+    // isDirect()
+    // 是否是使用的直接缓存区, 通常我们使用的 Buffer 类, 我们成为直接缓存区,
+    // 在 JVM 中还有有一个中间缓存, 缓存读数据的过程, 将硬盘中的的数据拷贝到中间缓存, 然后从中间缓存中拷贝数据, 写也是这样一个操作过程的, 如果有大量的读写, 这样会大大降低对数据的处理
+    // 直接使用直接缓冲区, 跳过将数据拷贝到中间缓存区这一步, 可以大大提高对数据的处理能力, 这种技术称之为零拷贝 [浅析Linux中的零拷贝技术]https://www.jianshu.com/p/fad3339e3448
+    // [零拷贝底层实现原理](https://juejin.im/entry/59b740fdf265da06633d02cf)
+
+    // Buffer 类中只有 ByteBuffer 可以使用直接缓存区
+
+    public void bufferTest5() {
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(100);
+        byteBuffer.put((byte) 1);
+        log.info("isDirect = {}", byteBuffer.isDirect());
+    }
+
+    // clear()
+    // 将缓冲区还原为初始状态, 这个初始状态是 position = 0, limit= capacity, mark= -1, 要注意这个方法只是将缓冲区还原为初始状态, 缓存里面的数据并不会被擦除
+
+    // flip()
+    // 调用该方法调用该方法会令 limit = position, position = 0, mark = -1
+    // 常用于在写入数据到缓存后调用该方法从缓存中读取数据
+
+    public void bufferTest6() {
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(100);
+        byteBuffer.put((byte) 0);
+        byteBuffer.put((byte) 1);
+        byteBuffer.put((byte) 2);
+        byteBuffer.flip();
+        log.info("byteBuffer[0] = {}", byteBuffer.get());
+        log.info("byteBuffer[1] = {}", byteBuffer.get());
+        log.info("byteBuffer[2] = {}", byteBuffer.get());
     }
 }
