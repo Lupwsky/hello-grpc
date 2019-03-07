@@ -26,6 +26,7 @@
         <module>socket-client</module>
         <module>java-guava</module>
         <module>netflix-ribbon</module>
+        <module>location</module>
         <module>zookeeper</module>
     </modules>
 
