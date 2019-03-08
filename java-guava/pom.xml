@@ -24,6 +24,19 @@
             <version>27.0.1-jre</version>
         </dependency>
 
+        <!-- Spring 重试工具 -->
+        <dependency>
+            <groupId>org.springframework.retry</groupId>
+            <artifactId>spring-retry</artifactId>
+        </dependency>
+
+        <!-- Guava 重试工具 -->
+        <dependency>
+            <groupId>com.github.rholder</groupId>
+            <artifactId>guava-retrying</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
         <dependency>
             <groupId>ru.lanwen.verbalregex</groupId>
             <artifactId>java-verbal-expressions</artifactId>
