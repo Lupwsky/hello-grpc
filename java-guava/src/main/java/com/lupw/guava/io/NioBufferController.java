@@ -15,6 +15,12 @@ public class NioBufferController {
 
     @GetMapping(value = "/nio/buffer/test")
     public void bufferTest() {
+        bufferTest1();
+        bufferTest2();
+        bufferTest3();
+        bufferTest4();
+        bufferTest5();
+        bufferTest6();
         bufferTest7();
         bufferTest8();
     }
@@ -62,7 +68,12 @@ public class NioBufferController {
 
         // 重新设置 limit 为 4, 读取 charBuffer[3] 出现异常
         charBuffer.limit(3);
-        log.info("charBuffer[4] = {}", charBuffer.get(3));
+        try {
+            log.info("charBuffer[4] = {}", charBuffer.get(3));
+        } catch (Exception e) {
+            log.info("charBuffer[4] = charBuffer.get(3) 出现异常啦");
+        }
+
     }
 
     // ## position() 和 position(int)
