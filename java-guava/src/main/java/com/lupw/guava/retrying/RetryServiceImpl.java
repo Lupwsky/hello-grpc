@@ -17,14 +17,28 @@ public class RetryServiceImpl {
 
     @Retryable(RetryException.class)
     public void doSomething() {
+        log.info("[开始执行任务1]");
+        throw new RetryException("抛出异常");
+    }
+
+
+    @Retryable(RetryException.class)
+    public void doSomething2() {
+        log.info("[开始执行任务2]");
         throw new RetryException("抛出异常");
     }
 
 
     // 如果最后经过重试的次数还是没有成功, 就执行加了 @Recover 注解的方法
+    // 如果有多个 Recover 方法, 只会执行第一个
 
     @Recover
-    public void doSomethingIfUnsuccessful() {
-        log.info("任务执行失败");
+    public void doSomethingIfUnsuccessful1() {
+        log.info("[任务执行失败1]");
+    }
+
+    @Recover
+    public void doSomethingIfUnsuccessful2() {
+        log.info("[任务执行失败2]");
     }
 }
