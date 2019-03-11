@@ -27,7 +27,7 @@
         <module>java-guava</module>
         <module>netflix-ribbon</module>
         <module>location</module>
-        <module>zookeeper-kafka</module>
+        <module>zookeeper</module>
     </modules>
 
 
