@@ -9,9 +9,9 @@
         <relativePath/>
     </parent>
     <groupId>com.lpw</groupId>
-    <artifactId>zookeeper-kafka</artifactId>
+    <artifactId>zookeeper</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>zookeeper-kafka</name>
+    <name>zookeeper</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
