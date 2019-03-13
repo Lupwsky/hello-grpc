@@ -29,17 +29,13 @@ public class ClientMain {
             while (true) {
                 Thread.sleep(5000);
                 log.info("开始发送数据 = {}", "你好, 来自客户端的问候, 时间 = " + DateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
-                bufferedWriter.write("你好, 来自客户端的问候, 时间 = " + DateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
+                bufferedWriter.write("你好, 来自客户端的问候, 时间 = " + DateTime.now().toString("yyyy-MM-dd HH:mm:ss") + "rn");
                 bufferedWriter.flush();
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         } finally {
             // 关闭连接和各种资源
-            // bufferedWriter.close();
-            // outputStreamWriter.close();
-            // outputStream.close();
-            // socket.close();
         }
     }
 

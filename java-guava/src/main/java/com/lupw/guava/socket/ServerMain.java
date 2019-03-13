@@ -2,10 +2,7 @@ package com.lupw.guava.socket;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -31,27 +28,32 @@ public class ServerMain {
             InputStream inputStream = socket.getInputStream();
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-
-            // 不能使用 readLine() 读取, 使用 readLine() 读取只有在 BufferedReader 断开的时候才能读取到数据
-            // String content = bufferedReader.readLine();
-            // log.info("服务端收到数据 = {}", content);
-
-            int len;
-            char[] contentChars = new char[1024];
-            while ((len = bufferedReader.read(contentChars)) != -1) {
-                log.info("服务端收到数据 = {}", new String(contentChars, 0, len));
+            String content;
+            while (true) {
+                content = readLine(bufferedReader);
+                log.info("服务端收到数据 = {}", content);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             // 关闭各种连接和资源
-            // bufferedReader.close();
-            // inputStreamReader.close();
-            // inputStream.close();
-            // socket.close();
-            // serverSocket.close();
         }
     }
 
+    private static String readLine(BufferedReader bufferedReader) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        int value = -1;
+        while ((value = bufferedReader.read()) != -1) {
+            if (value == 'r') {
+                bufferedReader.mark(1);
+                if (bufferedReader.read() != 'n') {
+                    bufferedReader.reset();
+                }
+                break;
+            }
+            // 字符流读取到值可以直接使用 char 强转
+            stringBuilder.append((char) value);
+        }
+        return stringBuilder.toString();
+    }
 }
