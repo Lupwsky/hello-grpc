@@ -220,11 +220,19 @@ private static String readLine(BufferedReader bufferedReader) throws IOException
 
 设置 ServerSocket 允许接受的客户端连接数, 默认为 50, 这个设置只是应用层面的控制, 实际允许的 TCP 连接数的最大值和操作系统允许进程打开的文件句柄数有关, 默认为允许的文件句柄数为 1024,  详见 [高性能网络编程(一): 单台服务器并发 TCP 连接数到底可以有多少](http://www.52im.net/thread-561-1-1.html)
 
+# ServerSocket 类常用 API
+
+详细参考: [ServerSocket API](http://tool.oschina.net/apidocs/apidoc?api=jdk-zh)
+
+# Socket 类常用 API
+
+详细参考: [Socket API](http://tool.oschina.net/apidocs/apidoc?api=jdk-zh)
+
 # 参考资料
 
+* NIO 与 SOCKET 编程技术指南 - 书籍
 * [高性能网络编程(一): 单台服务器并发 TCP 连接数到底可以有多少](http://www.52im.net/thread-561-1-1.html)
 * [基于 Netty 实现海量接入的推送服务技术要点](http://www.52im.net/forum.php?mod=viewthread&tid=166&ctid=9)
-* [ServerSocket API](http://tool.oschina.net/apidocs/apidoc?api=jdk-zh)
 
 
 
