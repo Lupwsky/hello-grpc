@@ -216,40 +216,15 @@ private static String readLine(BufferedReader bufferedReader) throws IOException
 
 上面只是一个简单的示例, 实际开发中很多的细节这里并没有体现, 例如发送消息的长度限制, 特殊字符的处理, 消息接收失败的处理, 服务端实现使用多线程处理允许多个客户端连接等等
 
-# ServerSocket 常用 API
-
-## ServerSocket 类构造方法的 backlog 参数
+# ServerSocket 类构造方法的 backlog 参数
 
 设置 ServerSocket 允许接受的客户端连接数, 默认为 50, 这个设置只是应用层面的控制, 实际允许的 TCP 连接数的最大值和操作系统允许进程打开的文件句柄数有关, 默认为允许的文件句柄数为 1024,  详见 [高性能网络编程(一): 单台服务器并发 TCP 连接数到底可以有多少](http://www.52im.net/thread-561-1-1.html)
-
-## setSoTimeout()
-
-setSoTimeout() 必须在调用 accept() 之前设置, 用于设置 accept() 的阻塞时间, 如果超时将抛出 SocketTimeoutException 异常, 但是 Socket 并不失效, 任然可以调用 accept() 进行监听, 设置为 0 表示永不超时, 默认值为 0
-
-## getLocalSocketAddress()
-
-获取本地绑定的地址, 如果没有绑定返回 null
-
-## getLocalPort() 
-
-获取本地绑定的端口号, 没有绑定返回 0
-
-## isClose()
-
-ServerSocket 是否已经被关闭
-
-## isBound()
-
-ServerSocket 是否成功的绑定
-
-# Socket 常用 API
-
-
 
 # 参考资料
 
 * [高性能网络编程(一): 单台服务器并发 TCP 连接数到底可以有多少](http://www.52im.net/thread-561-1-1.html)
 * [基于 Netty 实现海量接入的推送服务技术要点](http://www.52im.net/forum.php?mod=viewthread&tid=166&ctid=9)
+* [ServerSocket API](http://tool.oschina.net/apidocs/apidoc?api=jdk-zh)
 
 
 
