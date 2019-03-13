@@ -221,7 +221,7 @@ private static String readLine(BufferedReader bufferedReader) throws IOException
 11:33:56.570 [main] INFO com.lupw.guava.socket.ServerMain - 服务端收到数据 = 你好, 来自客户端的问候, 时间 = 2019-03-13 11:33:56
 ```
 
-上面只是一个简单的示例, 实际开发是会有更多细节的地方这里并没有体现, 例如检测发送消息的长度, 特殊字符的检测, 消息接收失败的处理等等
+上面只是一个简单的示例, 实际开发是会有更多细节的地方这里并没有体现, 例如检测发送消息的长度, 特殊字符的检测, 消息接收失败的处理, 服务端实现使用多线程处理允许多个客户端连接等等
 
 # 
 
