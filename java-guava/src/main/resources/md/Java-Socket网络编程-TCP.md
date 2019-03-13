@@ -4,7 +4,7 @@ date: 2019-03-12 22:11:49
 categories: Java
 ---
 
-TCP 是专门设计用于在不可靠的英特网上提供可靠的端到端的字节流通信的协议, 是一个面向连接的协议, Java 为 TCP 协议提供了两个 Socket 类: ServerSocket 和 Socket, ServerSocket 代表 TCP 协议中的一个服务器端, Socket 代表 TCP 中的一个客户端, Socket 用于实现服务器端和客户端的数据通信 (使用 TCP 或者 UDP), 一个完整的 Socket 编程流程图如下 (图片来源: NIO 与 Socket 编程技术指南):
+TCP 是专门设计用于在不可靠的英特网上提供可靠的端到端的字节流通信的协议, 是一个面向连接的协议, Java 为 TCP 协议提供了两个 Socket 类: ServerSocket 和 Socket, ServerSocket 代表 TCP 协议中的一个服务器端, Socket 代表 TCP 中的一个客户端, 这两个 Socket 类用于实现服务器端和客户端的数据通信 (使用 TCP 或者 UDP), 一个完整的 Socket 编程流程图如下 (图片来源: NIO 与 Socket 编程技术指南):
 
 <img src="Java-Socket网络编程-TCP/WechatIMG219.png" width="500" height="700"/>
 
@@ -47,15 +47,11 @@ public static void main(String[] args) {
     } finally {
         // 关闭各种连接和资源
         // bufferedReader.close();
-        // inputStreamReader.close();
-        // inputStream.close();
-        // socket.close();
-        // serverSocket.close();
     }
 }
 ```
 
-这段代码需要注意的是, `不能使用 BufferedReader.readLine() 读取, 使用 readLine() 读取只有在 BufferedReader 断开的时候才能读取到数据`, 会一直阻塞在这里
+这段代码需要注意的是, `不能使用 BufferedReader.readLine() 读取, 使用 readLine() 读取只有在 BufferedReader 断开的时候才能读取到数据, 另外要了解的是只有当 TCP 通信连接的一方关闭了套接字时, read() 方法才会返回 -1, 和读取文件不同, 当文件没有内容时就会返回 -1`, 会一直阻塞在这里
 
 # 客户端实现简单示例
 
@@ -69,7 +65,7 @@ public static void main(String[] args) {
         Socket socket = new Socket("127.0.0.1", 9000);
         log.info("连接服务端成功");
 
-        // 发送数据, 主动刷新缓存才会发送
+        // 发送数据, 使用缓存时需要主动刷新缓存才会发送
         OutputStream outputStream = socket.getOutputStream();
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
         BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
@@ -84,9 +80,6 @@ public static void main(String[] args) {
     } finally {
         // 关闭连接和各种资源
         // bufferedWriter.close();
-        // outputStreamWriter.close();
-        // outputStream.close();
-        // socket.close();
     }
 }
 ```
@@ -119,7 +112,7 @@ public static void main(String[] args) {
 23:50:13.481 [main] INFO com.lupw.guava.socket.ClientMain - 开始发送数据 = 你好, 来自客户端的问候, 时间 = 2019-03-12 23:50:13
 ```
 
-# 完整的接口一条消息
+# 完整的接收一条消息 (消息成帧与解析)
 
 上面的例子中, 看日志似乎时一行一行的再读取数据, 其实并不是, 第一个原因客户端发送信息的时间间隔比较长, 第二个原因是服务端接收数据的 char 数组比每次发送过来的消息要大, 将服务端接收数据的 char 数组改小一点, 比客户端发送的消息要小, 示例代码如下:
 
@@ -223,10 +216,40 @@ private static String readLine(BufferedReader bufferedReader) throws IOException
 
 上面只是一个简单的示例, 实际开发中很多的细节这里并没有体现, 例如发送消息的长度限制, 特殊字符的处理, 消息接收失败的处理, 服务端实现使用多线程处理允许多个客户端连接等等
 
-# 
+# ServerSocket 常用 API
+
+## ServerSocket 类构造方法的 backlog 参数
+
+设置 ServerSocket 允许接受的客户端连接数, 默认为 50, 这个设置只是应用层面的控制, 实际允许的 TCP 连接数的最大值和操作系统允许进程打开的文件句柄数有关, 默认为允许的文件句柄数为 1024,  详见 [高性能网络编程(一): 单台服务器并发 TCP 连接数到底可以有多少](http://www.52im.net/thread-561-1-1.html)
+
+## setSoTimeout()
+
+setSoTimeout() 必须在调用 accept() 之前设置, 用于设置 accept() 的阻塞时间, 如果超时将抛出 SocketTimeoutException 异常, 但是 Socket 并不失效, 任然可以调用 accept() 进行监听, 设置为 0 表示永不超时, 默认值为 0
+
+## getLocalSocketAddress()
+
+获取本地绑定的地址, 如果没有绑定返回 null
+
+## getLocalPort() 
+
+获取本地绑定的端口号, 没有绑定返回 0
+
+## isClose()
+
+ServerSocket 是否已经被关闭
+
+## isBound()
+
+ServerSocket 是否成功的绑定
+
+# Socket 常用 API
 
 
 
+# 参考资料
+
+* [高性能网络编程(一): 单台服务器并发 TCP 连接数到底可以有多少](http://www.52im.net/thread-561-1-1.html)
+* [基于 Netty 实现海量接入的推送服务技术要点](http://www.52im.net/forum.php?mod=viewthread&tid=166&ctid=9)
 
 
 
