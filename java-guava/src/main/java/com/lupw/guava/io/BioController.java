@@ -19,7 +19,7 @@ public class BioController {
     public void test() {
         FileInputStream fileInputStream = null;
         try {
-            fileInputStream = new FileInputStream("D:\\Work\\hello-grpc\\java-guava\\src\\main\\resources\\md\\test.txt");
+            fileInputStream = new FileInputStream("D:\\Work\\hello-grpc\\java-guava\\src\\main\\resources\\md\\file_channel_test.txt");
             // 字节输入流转换成字符输入流, 并指定编码集, 不指定默认使用 UTF-8
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
             // 转换成 BufferedReader 方便数据的读取, 每次读取一行
