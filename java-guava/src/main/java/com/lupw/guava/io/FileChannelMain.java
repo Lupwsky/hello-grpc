@@ -17,7 +17,7 @@ public class FileChannelMain {
 
     public static void main(String[] args) throws IOException {
         // I/O -> I/O 流, NIO -> Channel (通道)
-        // Java NIO 中的 FileChannel 是一个连接到文件的通道。可以通过文件通道读写文件, FileChannel 无法设置为非阻塞模式，它总是运行在阻塞模式下
+        // Java NIO 中的 FileChannel 是一个连接到文件的通道, 可以通过文件通道读写文件, FileChannel 无法设置为非阻塞模式，它总是运行在阻塞模式下
         // 通过使用一个 InputStream、OutputStream 或 RandomAccessFile 来获取一个 FileChannel
 
         read();
@@ -29,13 +29,15 @@ public class FileChannelMain {
 
         // [Java NIO (一) FileChannel 详解](https://blog.csdn.net/zrh_lawliet/article/details/81166028)
         // [Java NIO](http://xintq.net/2017/06/12/everything-about-java-nio/)
+
+        write();
     }
 
 
     // 读取文件内容
 
     private static void read() throws IOException {
-        RandomAccessFile readRandomAccessFile = new RandomAccessFile("D:\\Work\\hello-grpc\\java-guava\\src\\main\\resources\\md\\file_channel_test.txt", "rw");
+        RandomAccessFile readRandomAccessFile = new RandomAccessFile("/Users/lupengwei/IDEA/hello-grpc/java-guava/src/main/resources/md/file_channel_test.txt", "rw");
         FileChannel readFileChannel = readRandomAccessFile.getChannel();
         ByteBuffer readByteBuffer = ByteBuffer.allocate(1024);
         int len;
@@ -54,7 +56,7 @@ public class FileChannelMain {
     // 写文件内容, windows下的文本文件换行符: \r\n, linux/unix下的文本文件换行符 :\r, Mac下的文本文件换行符: \n
 
     private static void write() throws IOException {
-        RandomAccessFile writeRandomAccessFile = new RandomAccessFile("D:\\Work\\hello-grpc\\java-guava\\src\\main\\resources\\md\\file_channel_test.txt", "rw");
+        RandomAccessFile writeRandomAccessFile = new RandomAccessFile("/Users/lupengwei/IDEA/hello-grpc/java-guava/src/main/resources/md/file_channel_test.txt", "rw");
         FileChannel writeFileChannel = writeRandomAccessFile.getChannel();
         String baseWriteContent = "写入测试数据";
         ByteBuffer writeByteBuffer = ByteBuffer.allocate(1024);
