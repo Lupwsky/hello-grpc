@@ -84,7 +84,7 @@ public class NioServerSelector {
 
                 // SelectionKey.isWritable() 是表示 SocketChannel 可写, 网络不出现阻塞情况下, 一直是可以写的, 所认一直为 true, 一般我们不注册 OP_WRITE
                 // 如果上面 socketChannel.register(tempSelectionKey.selector(), SelectionKey.OP_READ | SelectionKey.OP_WRITE);
-                // 这里会不停的打印 "SocketChannel 可以写入数据了"
+                // 这里会不停的打印 "SocketChannel 可以写入数据了", 实际项目开发中这样会造成 CPU 极大的浪费
                 if (tempSelectionKey.isValid() && tempSelectionKey.isWritable()) {
                     log.info("SocketChannel 可以写入数据了");
                 }
