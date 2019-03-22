@@ -27,7 +27,9 @@ public class StreamIndexMain {
 
         // 如果需要使用索引同时转换成其他的类型, 使用 mapToObj 实现
         List<UserInfo> userInfoList = IntStream.range(0, dataList.size())
-                .mapToObj(i -> UserInfo.builder().password(String.valueOf(i)).build())
+                .mapToObj(i -> UserInfo.builder()
+                        .password(String.valueOf(i))
+                        .build())
                 .collect(Collectors.toList());
     }
 
