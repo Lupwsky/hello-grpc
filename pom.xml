@@ -28,6 +28,7 @@
         <module>netflix-ribbon</module>
         <module>location</module>
         <module>zookeeper</module>
+        <module>spring-study</module>
     </modules>
 
 
