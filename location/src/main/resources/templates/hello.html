@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="renderer" content="webkit">
     <title>首页</title>
-    <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
-    <script type="text/javascript" src="/static/js/login.js"></script>
-    <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js" th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" src="/static/js/login.js" th:src="@{/js/login.js}"></script>
+    <script type="text/javascript" src="/static/js/jquery.cookie.js" th:src="@{/js/jquery.cookie.js}"></script>
+    <script type="text/javascript" src="/static/js/element.js" th:src="@{/js/element.js}"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/element.css" th:href="@{/css/element.css}">
 </head>
 
 <body style="overflow:hidden">
