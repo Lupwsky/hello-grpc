@@ -2,6 +2,8 @@ package com.location.demo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author v_pwlu 2019/3/7
@@ -14,9 +16,10 @@ public class RouterController {
         return "/error";
     }
 
-    @GetMapping(value = "/location/templates/test")
-    public String templatesTest() {
-        return "hello";
+    @RequestMapping(value = "/location/templates/test")
+    public ModelAndView templatesTest() {
+        ModelAndView modelAndView = new ModelAndView("hello");
+        return modelAndView;
     }
 
 }

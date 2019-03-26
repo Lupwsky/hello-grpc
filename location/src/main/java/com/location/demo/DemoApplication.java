@@ -3,6 +3,9 @@ package com.location.demo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * @author v_pwlu
+ */
 @SpringBootApplication
 public class DemoApplication {
 
