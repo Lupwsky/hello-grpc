@@ -14,15 +14,10 @@ import java.util.Objects;
 @Slf4j
 public class DefineClassPathXmlApplicationContext extends ClassPathXmlApplicationContext {
 
-    public DefineClassPathXmlApplicationContext() {
-        super();
-    }
-
     DefineClassPathXmlApplicationContext(String... configLocations) throws BeansException {
         super(configLocations);
     }
 
-    //
     // 这个方法在源码中时没有任何实现的, 用户可以重写 initPropertySources 方法来实现自己的验证属性的逻辑, 是 Spring 开放式结构的体现
 
     @Override
