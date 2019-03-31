@@ -19,8 +19,6 @@ public class DefineClassPathXmlApplicationContextMain {
         UserInfo userInfo = applicationContext.getBean("userInfo", UserInfo.class);
         log.info("name = {}, email = {}", userInfo.getName(), userInfo.getEmail());
 
-        applicationContext.getBeanFactory(
-
         ConfigurableEnvironment environment1 = applicationContext.getBean(ENVIRONMENT_BEAN_NAME, ConfigurableEnvironment.class);
         ConfigurableEnvironment environment2 = applicationContext.getEnvironment();
 
