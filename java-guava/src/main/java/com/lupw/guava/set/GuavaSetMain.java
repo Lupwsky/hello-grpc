@@ -14,7 +14,7 @@ public class GuavaSetMain {
 
     public static void main(String[] args) {
         // Guava 添加了一些新的集合类型
-        multimapTest();
+        immutableMulitSetTest();
     }
 
 
@@ -106,13 +106,12 @@ public class GuavaSetMain {
 
     public static void immutableMulitSetTest() {
         // Guava 不可变集合
-        ImmutableMultiset<String> immutableMultiset = ImmutableMultiset.of("1", "2", "2", "3", "4");
-        immutableMultiset.forEach(log::info);
+//        ImmutableMultiset<String> immutableMultiset = ImmutableMultiset.of("1", "2", "2", "3", "4");
+//        immutableMultiset.forEach(log::info);
 
         // JDK 可变集合, 不会出现重复的元素
         Set<String> set = new HashSet<>();
         set.add("1");
-        set.add("2");
         set.add("2");
         set.add("3");
         set.add("4");
@@ -126,7 +125,7 @@ public class GuavaSetMain {
         unmodifiableSet.forEach(log::info);
 
         // JDK 不可变集合虽然可以调用 add 方法, 但是会出现 UnsupportedOperationException 异常
-        unmodifiableSet.add("7");
-        unmodifiableSet.forEach(log::info);
+//        unmodifiableSet.add("7");
+//        unmodifiableSet.forEach(log::info);
     }
 }
