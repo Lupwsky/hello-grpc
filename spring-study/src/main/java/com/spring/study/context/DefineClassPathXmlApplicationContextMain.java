@@ -31,5 +31,7 @@ public class DefineClassPathXmlApplicationContextMain {
         Properties systemEnvironmentProperties = applicationContext.getBean(SYSTEM_ENVIRONMENT_BEAN_NAME, Properties.class);
         log.info("-----------------------------------------------------------------------");
         systemEnvironmentProperties.forEach((key, value) -> log.info("key = {}, value = {}", key, value));
+
+        log.info("{}", userInfo.getApplicationContext().equals(applicationContext));
     }
 }

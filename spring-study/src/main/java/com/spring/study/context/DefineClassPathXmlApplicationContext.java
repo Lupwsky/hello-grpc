@@ -42,19 +42,5 @@ public class DefineClassPathXmlApplicationContext extends ClassPathXmlApplicatio
         // 如果该属性不存在则抛出 MissingRequiredPropertiesException 异常
         // 假设 JAVA_HOME 属性不存在抛出的异常提示 = MissingRequiredPropertiesException: The following properties were declared as required but could not be resolved: [JAVA_HOME]
         this.getEnvironment().setRequiredProperties("JAVA_HOME");
-
-        // validateRequiredProperties() 方法的实现如下, 可以知道只是简单的判断属性的值是否为 null, 如果需要更加复杂的验证还是自己去手动实现检测
-        // @Override
-        // public void validateRequiredProperties() {
-        //	   MissingRequiredPropertiesException ex = new MissingRequiredPropertiesException();
-        //	   for (String key : this.requiredProperties) {
-        //		   if (this.getProperty(key) == null) {
-        //			   ex.addMissingRequiredProperty(key);
-        //		   }
-        //	   }
-        //	   if (!ex.getMissingRequiredProperties().isEmpty()) {
-        //		   throw ex;
-        //	   }
-        // }
     }
 }
