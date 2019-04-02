@@ -13,31 +13,10 @@ import org.springframework.context.ApplicationContextAware;
  */
 @Slf4j
 @Data
-public class UserInfo implements ApplicationContextAware, InitializingBean, DisposableBean {
+public class UserInfo implements ApplicationContextAware {
     private String name;
     private String email;
     private ApplicationContext applicationContext;
-
-    public void init() {
-        log.info("UserInfo init");
-    }
-
-
-    public void destro1() {
-        log.info("UserInfo destroy");
-    }
-
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        log.info("UserInfo init");
-    }
-
-
-    @Override
-    public void destroy() throws Exception {
-        log.info("UserInfo destroy");
-    }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {

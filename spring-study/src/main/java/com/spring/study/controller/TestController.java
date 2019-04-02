@@ -56,5 +56,7 @@ public class TestController {
         beanTest.test();
 
         log.info("{}", systemProperties.get("JAVA_HOME"));
+
+        beanTest.test();
     }
 }
