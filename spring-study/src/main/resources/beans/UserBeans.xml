@@ -8,4 +8,14 @@
         <property name="email" value="lupengwei@qq.com"/>
     </bean>
 
+    <!--
+        通过配置工厂 Bean 的 userInfoType 来生成不同 Bean, 这两个 Bean 都是单实例的
+    -->
+    <bean id="userInfoA" class="com.spring.study.beans.BeanFactoryBean">
+        <property name="userInfoType" value="userInfoA"/>
+    </bean>
+
+    <bean id="userInfoB" class="com.spring.study.beans.BeanFactoryBean">
+        <property name="userInfoType" value="userInfoB"/>
+    </bean>
 </beans>
