@@ -2,6 +2,7 @@ package com.spring.study.context;
 
 import com.spring.study.beans.UserInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.env.ConfigurableEnvironment;
 
 import java.util.Properties;
@@ -33,5 +34,8 @@ public class DefineClassPathXmlApplicationContextMain {
         systemEnvironmentProperties.forEach((key, value) -> log.info("key = {}, value = {}", key, value));
 
         log.info("{}", userInfo.getApplicationContext().equals(applicationContext));
+
+        ObjectProvider<UserInfo> provider = applicationContext.getBeanProvider(UserInfo.class);
+        provider.getIfAvailable();
     }
 }
