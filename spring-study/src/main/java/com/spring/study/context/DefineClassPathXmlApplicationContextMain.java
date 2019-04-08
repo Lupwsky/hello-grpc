@@ -1,9 +1,6 @@
 package com.spring.study.context;
 
-import com.spring.study.beans.BeanFactoryBean;
-import com.spring.study.beans.UserInfo;
-import com.spring.study.beans.UserInfoA;
-import com.spring.study.beans.UserInfoB;
+import com.spring.study.beans.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.ConfigurableEnvironment;
 
@@ -40,5 +37,10 @@ public class DefineClassPathXmlApplicationContextMain {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        // 枚举测试
+        log.info("{}", EnumTest.getInstance("白色").getIndex());
+        log.info("{}", EnumTest.getInstance("白色").getName());
+        log.info("{}", EnumTest.getInstance("白色").getDesc());
     }
 }
