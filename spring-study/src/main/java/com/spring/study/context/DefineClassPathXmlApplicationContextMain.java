@@ -2,11 +2,7 @@ package com.spring.study.context;
 
 import com.spring.study.beans.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.env.ConfigurableEnvironment;
 
-import java.util.Properties;
-
-import static org.springframework.context.ConfigurableApplicationContext.*;
 
 /**
  * @author v_pwlu 2019/3/25
