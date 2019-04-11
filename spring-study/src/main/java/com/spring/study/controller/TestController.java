@@ -26,19 +26,14 @@ public class TestController {
     /**
      * 这个注入的集合类型的 bean 是当前所有注册到容器中的 bean 的集合
      */
-    private final Map<String, Object> systemProperties;
-
-    private final BeanTest beanTest;
+//    private final Map<String, Object> systemProperties;
 
     @Autowired
     public TestController(Environment environment,
-                          ConfigurableEnvironment configurableEnvironment,
-                          Map<String, Object> systemProperties,
-                          BeanTest beanTest) {
+                          ConfigurableEnvironment configurableEnvironment) {
         this.environment = environment;
         this.configurableEnvironment = configurableEnvironment;
-        this.systemProperties = systemProperties;
-        this.beanTest = beanTest;
+//        this.systemProperties = systemProperties;
     }
 
 
@@ -53,10 +48,6 @@ public class TestController {
         // 返回 true
         log.info("{}", environment.equals(configurableEnvironment));
 
-        beanTest.test();
-
-        log.info("{}", systemProperties.get("JAVA_HOME"));
-
-        beanTest.test();
+//        log.info("{}", systemProperties.get("JAVA_HOME"));
     }
 }

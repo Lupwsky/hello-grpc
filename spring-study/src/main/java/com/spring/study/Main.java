@@ -3,6 +3,7 @@ package com.spring.study;
 import com.alibaba.fastjson.JSONObject;
 import com.spring.study.beans.UserInfo;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 
@@ -14,7 +15,7 @@ public class Main {
 
     public static void main(String[] args) {
         XmlBeanFactory beanFactory = new XmlBeanFactory(new ClassPathResource("/beans/UserBeans.xml"));
-        UserInfo userInfo = beanFactory.getBean("userInfo", UserInfo.class);
+        UserInfo userInfo = (UserInfo) beanFactory.getBean("userInfo", "lupengwei", "lupengwei@qq.com");
         log.info("{}", JSONObject.toJSONString(userInfo));
         System.exit(0);
     }

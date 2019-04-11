@@ -4,8 +4,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="userInfo" class="com.spring.study.beans.UserInfo" scope="prototype">
-        <property name="name" value="lupengwei"/>
-        <property name="email" value="lupengwei@qq.com"/>
+        <constructor-arg name="name" value="lupengwei" type="java.lang.String" index="0"/>
+        <constructor-arg name="email" value="lupengwei@163.com" type="java.lang.String" index="1"/>
     </bean>
 
     <bean id="userInfoA" class="com.spring.study.beans.BeanFactoryBean">
