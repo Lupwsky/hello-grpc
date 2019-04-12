@@ -21,12 +21,12 @@ public class Main {
         XmlBeanFactory beanFactory = new XmlBeanFactory(new ClassPathResource("/beans/UserBeans.xml"));
         UserInfo userInfo = (UserInfo) beanFactory.getBean("userInfo", "lupengwei", "lupengwei@qq.com");
         log.info("{}", JSONObject.toJSONString(userInfo));
-
-        UserInfoA userInfoA = new UserInfoA();
-        beanFactory.registerSingleton("userInfoA", userInfoA);
-        log.info("{}", Arrays.toString(beanFactory.getSingletonNames()));
-
-        Object object = beanFactory.getSingletonMutex();
+//
+//        UserInfoA userInfoA = new UserInfoA();
+//        beanFactory.registerSingleton("userInfoA", userInfoA);
+//        log.info("{}", Arrays.toString(beanFactory.getSingletonNames()));
+//
+//        Object object = beanFactory.getSingletonMutex();
         System.exit(0);
     }
 }

@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+       default-lazy-init="true">
 
-    <bean id="userInfo" class="com.spring.study.beans.UserInfo">
-        <constructor-arg name="name" value="lupengwei" type="java.lang.String" index="0"/>
-        <constructor-arg name="email" value="lupengwei@163.com" type="java.lang.String" index="1"/>
-    </bean>
-
-    <bean id="userInfoA" class="com.spring.study.beans.BeanFactoryBean">
-        <property name="userInfoType" value="userInfoA"/>
-    </bean>
-
-    <bean id="userInfoB" class="com.spring.study.beans.BeanFactoryBean">
-        <property name="userInfoType" value="userInfoB"/>
+    <bean id="userInfo" class="com.spring.study.beans.UserInfo" lazy-init="true" name="userInfoAlias1,userInfoAlias2">
+        <constructor-arg name="name" value="lupengwei"/>
+        <constructor-arg name="email" value="lupengwei@163.com"/>
     </bean>
 </beans>

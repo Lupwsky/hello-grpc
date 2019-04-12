@@ -7,7 +7,9 @@ import com.spring.study.beans.UserInfoB;
 import com.spring.study.beans.UserInfoC;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.ApplicationContext;
@@ -45,28 +47,7 @@ public class BeanTestController {
     @GetMapping(value = "/bean/test")
     public void test() {
         log.info("{}", beanMap.size());
-        log.info("{}", applicationContext.containsBeanDefinition("userInfoA"));
-        log.info("{}", applicationContext.getBeanDefinitionCount());
-        log.info("{}", Arrays.toString(applicationContext.getBeanDefinitionNames()));
 
-        ResolvableType resolvableType = ResolvableType.forClass(UserInfo.class);
-        log.info("{}", Arrays.toString(applicationContext.getBeanNamesForType(resolvableType)));
-        log.info("{}", Arrays.toString(applicationContext.getBeanNamesForType(UserInfoB.class, false, false)));
-
-        Map<String, UserInfoC> userInfoMap = applicationContext.getBeansOfType(UserInfoC.class);
-        UserInfoC userInfo = userInfoMap.get("userInfoC1");
-        userInfo.setUserInfoC("lpw");
-        log.info("{}", JSONObject.toJSONString(userInfo));
-
-
-        Map<String, Object> map = applicationContext.getBeansWithAnnotation(MyAnnotation.class);
-        UserInfo info = (UserInfo) map.get("userInfo");
-        info.setName("lpw");
-        info.setName("lpw@qq.com");
-        log.info("{}", JSONObject.toJSONString(info));
-
-        MyAnnotation myAnnotation = applicationContext.findAnnotationOnBean("userInfo", MyAnnotation.class);
-        log.info("{}", myAnnotation.value());
     }
 
     private void register(String beanName,Class<?> beanClass){
