@@ -4,12 +4,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
        default-lazy-init="true">
 
-    <import resource="UserBeansImport.xml"/>
-
-    <bean id="userInfo" class="com.spring.study.beans.UserInfo" lazy-init="true" name="userInfoBeanName1,userInfoBeanName2">
+    <bean id="userInfoImport" class="com.spring.study.beans.UserInfoImport" lazy-init="true"
+          name="userInfoImportAlias1,userInfoImportAlias2">
         <constructor-arg name="name" value="lupengwei"/>
         <constructor-arg name="email" value="lupengwei@163.com"/>
     </bean>
-
-    <alias name="userInfo" alias="userInfoAlias1,userInfoAlias2"/>
 </beans>
