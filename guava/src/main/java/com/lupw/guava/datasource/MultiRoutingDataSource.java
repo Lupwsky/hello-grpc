@@ -19,9 +19,9 @@ public class MultiRoutingDataSource extends AbstractRoutingDataSource {
     protected Object determineCurrentLookupKey() {
         String currentDbKey = MultiRoutingDataSourceContext.getCurrentDbKey();
         if (StringUtils.isEmpty(currentDbKey)) {
-            log.error("当前数据源为空, 使用默认的数据源");
+            log.warn("当前数据源为空, 使用默认的数据源");
         } else {
-            log.info("当前数据源 = {}, 使用默认的数据源", currentDbKey);
+            log.info("当前数据源 = {}", currentDbKey);
         }
         return currentDbKey;
 

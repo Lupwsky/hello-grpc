@@ -8,5 +8,8 @@ import org.springframework.stereotype.Repository;
  */
 @Repository(value = "db0UserMapper")
 public interface UserMapper {
+    
     int addUserInfo(@Param("name") String name, @Param("password") String password);
+
+    String getGroovyContent(@Param("id") String id);
 }

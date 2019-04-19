@@ -50,7 +50,7 @@ public class BeanTestController {
 
     }
 
-    private void register(String beanName,Class<?> beanClass){
+    private void register(String beanName, Class<?> beanClass){
         BeanDefinitionRegistry beanRegistry = (BeanDefinitionRegistry) applicationContext.getAutowireCapableBeanFactory();
         try {
             beanRegistry.getBeanDefinition(beanName);
