@@ -24,9 +24,9 @@
         <module>thread-executor</module>
         <module>socket-server</module>
         <module>socket-client</module>
-        <module>java-guava</module>
+        <module>guava</module>
         <module>netflix-ribbon</module>
-        <module>location</module>
+        <module>demo</module>
         <module>zookeeper</module>
         <module>spring-study</module>
     </modules>
