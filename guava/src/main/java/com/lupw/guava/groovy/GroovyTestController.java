@@ -33,6 +33,7 @@ public class GroovyTestController {
     public void groovyTest() {
         BaseGroovySpot baseGroovySpot = applicationContext.getBean("groovyBean", BaseGroovySpot.class);
         log.info("content = {}", baseGroovySpot.test());
+        log.info("content = {}", baseGroovySpot.test2());
     }
 
 

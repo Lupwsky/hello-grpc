@@ -5,4 +5,5 @@ package com.lupw.guava.groovy;
  */
 public interface BaseGroovySpot {
     String test();
+    String test2();
 }

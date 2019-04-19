@@ -1,9 +1,12 @@
 package com.lupw.guava.groovy
 
 import com.lupw.guava.datasource.db.mapper.UserMapper
+import groovy.sql.Sql
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Lazy
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
+
+import javax.sql.DataSource
 
 /**
  * @author v_pwlu 2019/4/19
@@ -11,13 +14,15 @@ import org.springframework.stereotype.Component
 @Component
 class GroovyGroovySpot implements BaseGroovySpot {
 
-    private final UserMapper db0UserMapper;
 
     @Autowired
-    public GroovyGroovySpot(UserMapper db0UserMapper) {
-        this.db0UserMapper = db0UserMapper;
-    }
+    private UserMapper db0UserMapper;
 
+    @Autowired
+    @Qualifier("db0")
+    private final DataSource dataSource0;
+
+    @Override
     public String test() {
         String result
         int i = db0UserMapper.addUserInfo("lpw", "test")
@@ -29,5 +34,16 @@ class GroovyGroovySpot implements BaseGroovySpot {
             println("添加失败")
         }
         return result
+    }
+
+    @Override
+    public String test2() {
+        def sql = new Sql(dataSource0)
+        sql.eachRow("SELECT id, name, password FROM user_info WHERE id >= '0'") { row ->
+                println("id = " + row[0] +
+                        ", name = " + row[1] +
+                        ", password = " + row[2])
+        }
+        return "success"
     }
 }
