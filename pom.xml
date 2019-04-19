@@ -120,7 +120,7 @@
             <version>2.10</version>
         </dependency>
 
-        <!-- 元祖库, 方法多返回值时使用 -->
+        <!-- javatuples -->
         <dependency>
             <groupId>org.javatuples</groupId>
             <artifactId>javatuples</artifactId>
