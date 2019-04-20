@@ -24,9 +24,9 @@
         <module>thread-executor</module>
         <module>socket-server</module>
         <module>socket-client</module>
-        <module>java-guava</module>
+        <module>guava</module>
         <module>netflix-ribbon</module>
-        <module>location</module>
+        <module>demo</module>
         <module>zookeeper</module>
         <module>spring-study</module>
     </modules>
@@ -113,10 +113,18 @@
             <version>0.0.2</version>
         </dependency>
 
+        <!-- joda-time -->
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>2.10</version>
+        </dependency>
+
+        <!-- javatuples -->
+        <dependency>
+            <groupId>org.javatuples</groupId>
+            <artifactId>javatuples</artifactId>
+            <version>1.2</version>
         </dependency>
     </dependencies>
 
