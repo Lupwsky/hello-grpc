@@ -47,6 +47,7 @@ public class GroovyTestController {
         beanDefinition.setScope(BeanDefinition.SCOPE_SINGLETON);
 
         AutowireCapableBeanFactory autowireCapableBeanFactory = applicationContext.getAutowireCapableBeanFactory();
+        autowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(beanDefinition, "groovyBean");
         autowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization(beanDefinition, "groovyBean");
 
         BeanDefinitionRegistry beanRegistry = (BeanDefinitionRegistry) autowireCapableBeanFactory;
