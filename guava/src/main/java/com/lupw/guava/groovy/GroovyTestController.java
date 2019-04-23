@@ -37,6 +37,9 @@ public class GroovyTestController {
     }
 
 
+    /**
+     * 可能出现的问题, 正在使用 groovyBean 时 groovyBean 这个实例被删除了导致出现异常
+     */
     @GetMapping(value = "/groovy/add/bean")
     public void groovyAddBean() {
         String content = db0UserMapper.getGroovyContent("1");
@@ -47,6 +50,7 @@ public class GroovyTestController {
         beanDefinition.setScope(BeanDefinition.SCOPE_SINGLETON);
 
         AutowireCapableBeanFactory autowireCapableBeanFactory = applicationContext.getAutowireCapableBeanFactory();
+        autowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(beanDefinition, "groovyBean");
         autowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization(beanDefinition, "groovyBean");
 
         BeanDefinitionRegistry beanRegistry = (BeanDefinitionRegistry) autowireCapableBeanFactory;
