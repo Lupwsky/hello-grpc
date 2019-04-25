@@ -1,26 +1,56 @@
 package com.lupw.guava.elasticsearch;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.DocWriteRequest;
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
+import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
+import org.elasticsearch.action.bulk.BulkItemResponse;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.core.TermVectorsRequest;
+import org.elasticsearch.client.core.TermVectorsResponse;
+import org.elasticsearch.common.unit.Fuzziness;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.get.GetResult;
+import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.index.reindex.BulkByScrollResponse;
+import org.elasticsearch.index.reindex.ReindexRequest;
+import org.elasticsearch.index.reindex.UpdateByQueryRequest;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author v_pwlu 2019/4/23
@@ -30,6 +60,7 @@ import java.util.Map;
 public class ElasticSearchController {
 
     private final static String ES_INDEX = "user_data";
+    private final static String ES_INDEX_1 = "user_data1";
     private final static String ES_TYPE = "user_info";
     private final RestHighLevelClient client;
 
@@ -39,6 +70,7 @@ public class ElasticSearchController {
     }
 
     /**
+     * 指定 ID 处添加文档, 如果索引库不存在就会创建, 单纯的创建索引库使用 CreateIndexRequest, 如果 ID 已经存在则会替换文档
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.6/java-rest-high-document-index.html
      * Index 和 Type 的区别 = http://bayescafe.com/database/elasticsearch-using-index-or-type.html
      */
@@ -46,9 +78,9 @@ public class ElasticSearchController {
     public void createIndexTest() {
         Map<String, Object> jsonMap = Maps.newHashMap();
         jsonMap.put("name", "lpw");
-        jsonMap.put("password", "test");
+        jsonMap.put("password", "test1111");
 
-        IndexRequest indexRequest = new IndexRequest(ES_INDEX, ES_TYPE, "1");
+        IndexRequest indexRequest = new IndexRequest(ES_INDEX_1, ES_TYPE, "1");
         indexRequest.source(jsonMap);
 
         try {
@@ -59,6 +91,7 @@ public class ElasticSearchController {
     }
 
     /**
+     * 根据 ID 查询文档
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.6/java-rest-high-document-get.html
      */
     @GetMapping("/elasticsearch/get/request/test")
@@ -76,6 +109,7 @@ public class ElasticSearchController {
     }
 
     /**
+     * 根据 ID 查询文档是否存在
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.6/java-rest-high-document-exist.html
      */
     @GetMapping("/elasticsearch/exist/request/test")
@@ -90,6 +124,7 @@ public class ElasticSearchController {
     }
 
     /**
+     * 根据 ID 删除文档
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.6/java-rest-high-document-delete.html
      */
     @GetMapping("/elasticsearch/delete/request/test")
@@ -104,6 +139,7 @@ public class ElasticSearchController {
     }
 
     /**
+     * 根据 ID 删除文档
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.6/java-rest-high-document-update.html
      */
     @GetMapping("/elasticsearch/update/request/test")
@@ -112,10 +148,8 @@ public class ElasticSearchController {
         try {
             XContentBuilder builder = XContentFactory.jsonBuilder();
             builder.startObject();
-            {
-                builder.field("name", "lpw123");
-                builder.field("password", "lpw123");
-            }
+            builder.field("name", "lpw123");
+            builder.field("password", "lpw123");
             builder.endObject();
 
             UpdateResponse updateResponse = client.update(updateRequest, RequestOptions.DEFAULT);
@@ -129,12 +163,293 @@ public class ElasticSearchController {
     }
 
     /**
-     * 功能 = 返回特定文档字段中术语的信息和统计信息
+     * 获取指定文档中指定字段的分词信息和统计信息, 可以设置指定返回哪些统计信息
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.6/java-rest-high-document-term-vectors.html
      */
     @GetMapping("/elasticsearch/term/request/test")
     public void termVectorsRequestTest() {
+        // 将数据存入 ES 的过程就是先将数据分词然后添加到倒排索引表的过程, 一个分词存放在一个 term 中
         TermVectorsRequest termVectorsRequest = new TermVectorsRequest(ES_INDEX, ES_TYPE, "1");
         termVectorsRequest.setFields("name", "password");
+        try {
+            TermVectorsResponse response = client.termvectors(termVectorsRequest, RequestOptions.DEFAULT);
+            log.info("found 字段是否存在 = {}", response.getFound());
+
+            TermVectorsResponse.TermVector termVector = response.getTermVectorsList().get(0);
+            log.info("filedName 字段名称 = {}", termVector.getFieldName());
+
+            TermVectorsResponse.TermVector.FieldStatistics fieldStatistics = termVector.getFieldStatistics();
+            log.info("docCount 文档的数量 = {}", fieldStatistics.getDocCount());
+            log.info("sumDocFreq 出现频率的总和 = {}", fieldStatistics.getSumDocFreq());
+            log.info("sumTotalTermFreq 文档频率的总和 = {}", fieldStatistics.getSumTotalTermFreq());
+
+            TermVectorsResponse.TermVector.Term term = termVector.getTerms().get(0);
+            log.info("分词的值 = {}", term.getTerm());
+            log.info("分词的频率 = {}", term.getTermFreq());
+            log.info("分词在文档频率 = {}", term.getDocFreq());
+            log.info("分词出现的总频率 = {}", term.getTotalTermFreq());
+            log.info("分词的的分数 = {}", term.getScore());
+
+            TermVectorsResponse.TermVector.Token token = term.getTokens().get(0);
+            log.info("payload = {}", token.getPayload());
+            log.info("position 分词在文档中的位置 = {}", token.getPosition());
+            log.info("startOffset 分词的开始位置 = {}", token.getStartOffset());
+            log.info("endOffset 分词的结束位置 = {}", token.getEndOffset());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 创建测试数据
+     */
+    @GetMapping("/elasticsearch/create/test/data")
+    public void createTestData() {
+        for (int i = 0; i < 10; i++) {
+            IndexRequest indexRequest = new IndexRequest(ES_INDEX, ES_TYPE);
+            try {
+                XContentBuilder xContentBuilder = XContentFactory.contentBuilder(XContentType.JSON);
+                xContentBuilder.startObject();
+                xContentBuilder.field("username", UUID.randomUUID().toString().replace("-", "") + "lpw" + i + UUID.randomUUID().toString().replace("-", ""));
+                xContentBuilder.field("password", UUID.randomUUID().toString().replace("-", "") + "lpw" + i + UUID.randomUUID().toString().replace("-", ""));
+                xContentBuilder.field("desc", "你好, 这是测试数据" + i);
+                xContentBuilder.field("timestamp", DateTime.now().minusHours(i).toString("yyyy-MM-dd HH:mm:ss"));
+                xContentBuilder.endObject();
+                indexRequest.source(xContentBuilder);
+                client.index(indexRequest, RequestOptions.DEFAULT);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    /**
+     * 批量操作
+     * Bulk API = 可组合多个 Request, 一次执行增删改产的 Request
+     * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.6/java-rest-high-document-bulk.html
+     *
+     * Multi API = 在一次请求中并行的执行多个 GetRequest
+     * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.6/java-rest-high-document-multi-get.html
+     *
+     * Multi Term Vectors API = 批量操作获取分词的信息和统计信息
+     * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.0/java-rest-high-document-multi-term-vectors.html
+     */
+    @GetMapping("/elasticsearch/bulk/request/test")
+    public void bulkRequestTest() {
+        Map<String, Object> jsonMap = Maps.newHashMap();
+        jsonMap.put("nameBulkTest", "lpw1");
+        jsonMap.put("passwordBulkTest", "test222");
+
+        BulkRequest bulkRequest = new BulkRequest();
+        bulkRequest.add(new IndexRequest(ES_INDEX, ES_TYPE, "1").source(jsonMap));
+        bulkRequest.add(new UpdateRequest(ES_INDEX, ES_TYPE, "1").doc(XContentType.JSON, jsonMap));
+        try {
+            BulkResponse bulkResponse = client.bulk(bulkRequest, RequestOptions.DEFAULT);
+            BulkItemResponse[] items = bulkResponse.getItems();
+            Arrays.stream(items).forEach(bulkItemResponse -> {
+                if (!bulkItemResponse.isFailed()) {
+                    DocWriteRequest.OpType opType = bulkItemResponse.getOpType();
+                    switch (opType) {
+                        case INDEX:
+                            IndexResponse indexResponse = bulkItemResponse.getResponse();
+                            log.info("indexResponse = {}", JSONObject.toJSONString(indexResponse));
+                            break;
+                        case CREATE:
+                            IndexResponse createIndexResponse = bulkItemResponse.getResponse();
+                            log.info("createIndexResponse = {}", JSONObject.toJSONString(createIndexResponse));
+                            break;
+                        case DELETE:
+                            UpdateResponse updateResponse = bulkItemResponse.getResponse();
+                            log.info("updateResponse = {}", JSONObject.toJSONString(updateResponse));
+                            break;
+                        case UPDATE:
+                            DeleteResponse deleteResponse = bulkItemResponse.getResponse();
+                            log.info("deleteResponse = {}", JSONObject.toJSONString(deleteResponse));
+                            break;
+                        default:
+                            break;
+                    }
+                } else {
+                    log.info("获取操作失败的信息 = {}", JSONObject.toJSONString(bulkItemResponse.getFailure()));
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 将文档从一个索引库或者多个索引库复制到指定的索引库, 新的接口和官方文档有不同
+     * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.0/java-rest-high-document-reindex.html
+     */
+    @GetMapping("/elasticsearch/reindex/test")
+    public void reindexTest() {
+        // 将 ES_INDEX 索引库中所有符合条件的文档复制到 ES_INDEX_1 索引库的 ES_TYPE 下
+        SearchRequest searchRequest = new SearchRequest(ES_INDEX);
+        SearchSourceBuilder searchSourceBuilder = SearchSourceBuilder.searchSource()
+                .query(new TermQueryBuilder("name", "lpw"));
+        ReindexRequest reindexRequest = new ReindexRequest(searchRequest, new IndexRequest(ES_INDEX_1, ES_TYPE));
+    }
+
+
+    /**
+     * Update By Query API = 在不更改源的情况下更新索引库中的文档, 新的接口和官方文档有不同
+     * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.0/java-rest-high-document-update-by-query.html
+     *
+     * DELETE BY QUERY API = 删除符合指定索引库中符合查询条件的文档, 新的接口和官方文档有不同
+     * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.0/java-rest-high-document-delete-by-query.html
+     */
+    @GetMapping("/elasticsearch/update/by/query/api/test")
+    public void updateByQueryApi() {
+        // 设置需要更新文档的索引库, 可设置多个
+        SearchRequest searchRequest = new SearchRequest(ES_INDEX, ES_INDEX_1);
+        // 设置条件, 例如这里 name = lpw 的文档事符合更改条件的文档, 并这设置处理文档的限制数量
+        SearchSourceBuilder searchSourceBuilder = SearchSourceBuilder.searchSource()
+                .query(new TermQueryBuilder("name", "lpw"))
+                .size(100);
+        searchRequest.source(searchSourceBuilder);
+
+        UpdateByQueryRequest updateByQueryRequest = new UpdateByQueryRequest(searchRequest);
+        try {
+            BulkByScrollResponse bulkByScrollResponse = client.updateByQuery(updateByQueryRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 查询, 搜索指定索引库中的所有文档
+     * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.0/java-rest-high-search.html
+     */
+    @GetMapping("/elasticsearch/get/all/doc/test")
+    public void getAllDocTest() throws IOException {
+        SearchRequest searchRequest = new SearchRequest(ES_INDEX);
+        SearchSourceBuilder searchSourceBuilder = SearchSourceBuilder.searchSource();
+        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
+        searchRequest.source(searchSourceBuilder);
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        log.info("searchResponse = {}", JSONObject.toJSONString(searchResponse));
+
+        // Clusters
+        // 在集群情况下搜索时, 保存集群的信息, 总数量，成功的数量和跳过的数量
+        SearchResponse.Clusters clusters = searchResponse.getClusters();
+        log.info("集群中服务的总数量 = {}", clusters.getTotal());
+        log.info("成功的数量 = {}", clusters.getSuccessful());
+        log.info("跳过的数量 = {}", clusters.getSkipped());
+
+        // 执行搜索时的使用的分片信息
+        log.info("搜索执行失败的分片数 = {}", searchResponse.getFailedShards());
+        log.info("执行搜索的分片总数 = {}", searchResponse.getTotalShards());
+        log.info("执行搜索的跳过分片总数 = {}", searchResponse.getSkippedShards());
+        log.info("执行搜索成功的分片数 = {}", searchResponse.getSuccessfulShards());
+        log.info("执行搜索失败的分片原因集合 = {}", JSONObject.toJSONString(searchResponse.getShardFailures()));
+
+        // 如果启用了性能分析, 则会返回包含每个分片的概要文件结果的对象, 如果未启用分析，则返回 null
+        // 指向的是 $.hits.hits[0].fields 字段
+        log.info("profileResults = {}", JSONObject.toJSONString(searchResponse.getProfileResults()));
+
+        // 搜索是否超时
+        log.info("搜索是否超时 = {}", searchResponse.isTimedOut());
+
+        // 搜索使用的时间信息
+        TimeValue took = searchResponse.getTook();
+        log.info("搜索总耗时 = {}", took.getStringRep());
+
+        // 命中的文档数据
+        SearchHits responseHits = searchResponse.getHits();
+        log.info("命中的文档总数 = {}", responseHits.getTotalHits());
+        log.info("命中文档数据中的分数最大值 = {}", responseHits.getMaxScore());
+        log.info("文档数据 = {}", responseHits.getAt(0));
+
+        // 输出示例数据:
+        //{
+        //    "fields": {
+        //        "$ref": "$.hits.hits[0].fields"
+        //    },
+        //    "fragment": false,
+        //    "highlightFields": {
+        //        "$ref": "$.hits.hits[0].fields"
+        //    },
+        //    "id": "poKZUmoBAPeAwT9XkOG4",
+        //    "matchedQueries": [],
+        //    "score": 1.0,
+        //    "sortValues": [],
+        //    "sourceAsMap": {
+        //        "password": "lpw2",
+        //        "username": "lpw2",
+        //        "desc": "你好, 这是测试数据2",
+        //        "timestamp": "2019-04-25 09:45:56"
+        //    },
+        //    "sourceAsString": "{\"username\":\"lpw2\",\"password\":\"lpw2\",\"desc\":\"你好, 这是测试数据2\",\"timestamp\":\"2019-04-25 09:45:56\"}",
+        //    "sourceRef": {
+        //        "childResources": [],
+        //        "fragment": true
+        //    },
+        //    "type": "user_info",
+        //    "version": -1
+        //}
+    }
+
+
+    /**
+     * 查询符合条件的文档
+     * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.0/java-rest-high-search.html
+     */
+    @PostMapping("/elasticsearch/search/request/test")
+    public void searchRequestTest(String fieldName, String value) throws IOException {
+        // Simple Query = 简单查询
+        // SearchRequest searchRequest = new SearchRequest(ES_INDEX, ES_INDEX_1);
+        // SearchSourceBuilder searchSourceBuilder = SearchSourceBuilder.searchSource();
+        // searchSourceBuilder.query(QueryBuilders.termQuery(fieldName, value));
+        // searchSourceBuilder.from(0);
+        // searchSourceBuilder.size(1);
+        // searchSourceBuilder.timeout(new TimeValue(60, TimeUnit.MINUTES));
+    }
+
+    /**
+     * MatchQueryBuilder
+     * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.0/java-rest-high-search.html
+     * 前缀查询, 模糊查询, 正则查询 = https://blog.csdn.net/SunnyYoona/article/details/52852483
+     */
+    @PostMapping("/elasticsearch/match/query/test")
+    public void matchQueryTest(String fieldName, String value) throws IOException {
+        SearchRequest matchSearchRequest = new SearchRequest(ES_INDEX);
+        SearchSourceBuilder matchSearchSourceBuilder = SearchSourceBuilder.searchSource();
+        MatchQueryBuilder matchQueryBuilder = new MatchQueryBuilder(fieldName, value);
+        // 启用 fuzziness 模糊查询, 5.0 已废弃, 不建议使用
+        // http://cwiki.apachecn.org/pages/viewpage.action?pageId=4882439
+        // https://www.felayman.com/articles/2017/12/11/1512989028146.html#b3_solo_h3_4
+        // https://iamyida.iteye.com/blog/2195066
+        // matchQueryBuilder.fuzziness(Fuzziness.AUTO);
+        // 模糊查询最少公共匹配前缀, 举几个例子:
+        // filedName = username, value = lpw1, prefixLength = 0, 可匹配到 username 的值是以 lpw 开头的所有数据
+        // filedName = username, value = pw1, prefixLength = 1, 可以匹配到
+        // matchQueryBuilder.prefixLength(1);
+        // 模糊查询最大编辑距离
+        // matchQueryBuilder.maxExpansions(2);
+
+        // 设定查询 limit 和排序规则
+        // 这里调试排序出现异常, 聚合操作异常 = https://blog.csdn.net/wwd0501/article/details/78490201
+        // matchSearchSourceBuilder.sort(new FieldSortBuilder("username").order(SortOrder.DESC))
+        matchSearchSourceBuilder.query(matchQueryBuilder);
+        matchSearchSourceBuilder.from(0);
+        matchSearchSourceBuilder.size(10);
+
+        // 设置需要高亮的字段
+        HighlightBuilder highlightBuilder = new HighlightBuilder ();
+        highlightBuilder.field("username");
+        matchSearchSourceBuilder.highlighter(highlightBuilder);
+
+        matchSearchRequest.source(matchSearchSourceBuilder);
+
+        // 开始查询
+        SearchResponse searchResponse = client.search(matchSearchRequest, RequestOptions.DEFAULT);
+        Arrays.stream(searchResponse.getHits().getHits()).forEach(searchHit -> {
+            log.info("source = {}, highlighter = {}", searchHit.getSourceAsString(), searchHit.getHighlightFields());
+        });
     }
 }
