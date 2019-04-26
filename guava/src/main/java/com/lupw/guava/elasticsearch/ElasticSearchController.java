@@ -555,7 +555,6 @@ public class ElasticSearchController {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(QueryBuilders.matchQuery("username", "lpw1"));
         countRequest.source(searchSourceBuilder);
-
         CountResponse countResponse = client.count(countRequest, RequestOptions.DEFAULT);
         log.info("matchCount = {}", countResponse.getCount());
     }
