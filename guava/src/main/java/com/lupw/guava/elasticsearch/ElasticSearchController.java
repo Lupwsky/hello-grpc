@@ -230,10 +230,10 @@ public class ElasticSearchController {
      * 批量操作
      * Bulk API = 可组合多个 Request, 一次执行增删改产的 Request
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.6/java-rest-high-document-bulk.html
-     * <p>
+     *
      * Multi API = 在一次请求中并行的执行多个 GetRequest
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.6/java-rest-high-document-multi-get.html
-     * <p>
+     *
      * Multi Term Vectors API = 批量操作获取分词的信息和统计信息
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.0/java-rest-high-document-multi-term-vectors.html
      */
@@ -299,7 +299,7 @@ public class ElasticSearchController {
     /**
      * Update By Query API = 在不更改源的情况下更新索引库中的文档, 新的接口和官方文档有不同
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.0/java-rest-high-document-update-by-query.html
-     * <p>
+     *
      * DELETE BY QUERY API = 删除符合指定索引库中符合查询条件的文档, 新的接口和官方文档有不同
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.0/java-rest-high-document-delete-by-query.html
      */
