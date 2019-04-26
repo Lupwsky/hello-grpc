@@ -26,13 +26,10 @@ import java.util.Map;
 @RestController
 public class BeanTestController2 {
 
-    private final Map<String, Object> beanMap;
     private final ApplicationContext applicationContext;
 
     @Autowired
-    public BeanTestController2(Map<String, Object> beanMap,
-                               ApplicationContext applicationContext) {
-        this.beanMap = beanMap;
+    public BeanTestController2(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 

@@ -28,13 +28,10 @@ import java.util.Map;
 @RestController
 public class BeanTestController {
 
-    private final Map<String, Object> beanMap;
     private final ApplicationContext applicationContext;
 
     @Autowired
-    public BeanTestController(Map<String, Object> beanMap,
-                              ApplicationContext applicationContext) {
-        this.beanMap = beanMap;
+    public BeanTestController(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 
@@ -46,7 +43,6 @@ public class BeanTestController {
 
     @GetMapping(value = "/bean/test")
     public void test() {
-        log.info("{}", beanMap.size());
 
     }
 
