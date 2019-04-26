@@ -11,16 +11,20 @@ import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
+import org.elasticsearch.action.fieldcaps.FieldCapabilities;
+import org.elasticsearch.action.fieldcaps.FieldCapabilitiesRequest;
+import org.elasticsearch.action.fieldcaps.FieldCapabilitiesResponse;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.*;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.core.CountRequest;
+import org.elasticsearch.client.core.CountResponse;
 import org.elasticsearch.client.core.TermVectorsRequest;
 import org.elasticsearch.client.core.TermVectorsResponse;
 import org.elasticsearch.common.unit.Fuzziness;
@@ -43,7 +47,7 @@ import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -70,12 +74,15 @@ public class ElasticSearchController {
         this.client = client;
     }
 
+    // 官方文档 =
+    // ElasticSearch Java API = https://es.quanke.name/
+
     /**
      * 指定 ID 处添加文档, 如果索引库不存在就会创建, 单纯的创建索引库使用 CreateIndexRequest, 如果 ID 已经存在则会替换文档
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.6/java-rest-high-document-index.html
      * Index 和 Type 的区别 = http://bayescafe.com/database/elasticsearch-using-index-or-type.html
      */
-    @GetMapping("/elasticsearch/create/index/test")
+    @PostMapping("/elasticsearch/create/index/test")
     public void createIndexTest() {
         Map<String, Object> jsonMap = Maps.newHashMap();
         jsonMap.put("name", "lpw");
@@ -95,7 +102,7 @@ public class ElasticSearchController {
      * 根据 ID 查询文档
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.6/java-rest-high-document-get.html
      */
-    @GetMapping("/elasticsearch/get/request/test")
+    @PostMapping("/elasticsearch/get/request/test")
     public void getRequestTest() {
         GetRequest getRequest = new GetRequest(ES_INDEX, ES_TYPE, "1");
         try {
@@ -113,7 +120,7 @@ public class ElasticSearchController {
      * 根据 ID 查询文档是否存在
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.6/java-rest-high-document-exist.html
      */
-    @GetMapping("/elasticsearch/exist/request/test")
+    @PostMapping("/elasticsearch/exist/request/test")
     public void existRequestTest() {
         GetRequest getRequest = new GetRequest(ES_INDEX, ES_TYPE, "1");
         try {
@@ -128,7 +135,7 @@ public class ElasticSearchController {
      * 根据 ID 删除文档
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.6/java-rest-high-document-delete.html
      */
-    @GetMapping("/elasticsearch/delete/request/test")
+    @PostMapping("/elasticsearch/delete/request/test")
     public void deleteRequestTest() {
         DeleteRequest deleteRequest = new DeleteRequest(ES_INDEX, ES_TYPE, "2");
         try {
@@ -143,7 +150,7 @@ public class ElasticSearchController {
      * 根据 ID 删除文档
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.6/java-rest-high-document-update.html
      */
-    @GetMapping("/elasticsearch/update/request/test")
+    @PostMapping("/elasticsearch/update/request/test")
     public void updateRequestTest() {
         UpdateRequest updateRequest = new UpdateRequest(ES_INDEX, ES_TYPE, "1");
         try {
@@ -167,7 +174,7 @@ public class ElasticSearchController {
      * 获取指定文档中指定字段的分词信息和统计信息, 可以设置指定返回哪些统计信息
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.6/java-rest-high-document-term-vectors.html
      */
-    @GetMapping("/elasticsearch/term/request/test")
+    @PostMapping("/elasticsearch/term/request/test")
     public void termVectorsRequestTest() {
         // 将数据存入 ES 的过程就是先将数据分词然后添加到倒排索引表的过程, 一个分词存放在一个 term 中
         TermVectorsRequest termVectorsRequest = new TermVectorsRequest(ES_INDEX, ES_TYPE, "1");
@@ -205,7 +212,7 @@ public class ElasticSearchController {
     /**
      * 创建测试数据
      */
-    @GetMapping("/elasticsearch/create/test/data")
+    @PostMapping("/elasticsearch/create/test/data")
     public void createTestData() {
         for (int i = 0; i < 10; i++) {
             IndexRequest indexRequest = new IndexRequest(ES_INDEX, ES_TYPE);
@@ -237,7 +244,7 @@ public class ElasticSearchController {
      * Multi Term Vectors API = 批量操作获取分词的信息和统计信息
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.0/java-rest-high-document-multi-term-vectors.html
      */
-    @GetMapping("/elasticsearch/bulk/request/test")
+    @PostMapping("/elasticsearch/bulk/request/test")
     public void bulkRequestTest() {
         Map<String, Object> jsonMap = Maps.newHashMap();
         jsonMap.put("nameBulkTest", "lpw1");
@@ -286,7 +293,7 @@ public class ElasticSearchController {
      * 将文档从一个索引库或者多个索引库复制到指定的索引库, 新的接口和官方文档有不同
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.0/java-rest-high-document-reindex.html
      */
-    @GetMapping("/elasticsearch/reindex/test")
+    @PostMapping("/elasticsearch/reindex/test")
     public void reindexTest() {
         // 将 ES_INDEX 索引库中所有符合条件的文档复制到 ES_INDEX_1 索引库的 ES_TYPE 下
         SearchRequest searchRequest = new SearchRequest(ES_INDEX);
@@ -303,7 +310,7 @@ public class ElasticSearchController {
      * DELETE BY QUERY API = 删除符合指定索引库中符合查询条件的文档, 新的接口和官方文档有不同
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.0/java-rest-high-document-delete-by-query.html
      */
-    @GetMapping("/elasticsearch/update/by/query/api/test")
+    @PostMapping("/elasticsearch/update/by/query/api/test")
     public void updateByQueryApi() {
         // 设置需要更新文档的索引库, 可设置多个
         SearchRequest searchRequest = new SearchRequest(ES_INDEX, ES_INDEX_1);
@@ -326,7 +333,7 @@ public class ElasticSearchController {
      * 查询, 搜索指定索引库中的所有文档
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.0/java-rest-high-search.html
      */
-    @GetMapping("/elasticsearch/get/all/doc/test")
+    @PostMapping("/elasticsearch/get/all/doc/test")
     public void getAllDocTest() throws IOException {
         SearchRequest searchRequest = new SearchRequest(ES_INDEX);
         SearchSourceBuilder searchSourceBuilder = SearchSourceBuilder.searchSource();
@@ -440,7 +447,7 @@ public class ElasticSearchController {
 
         // 设定查询的 limit 和排序规则
         // 这里调试排序出现异常, 聚合操作异常 = https://blog.csdn.net/wwd0501/article/details/78490201
-        // matchSearchSourceBuilder.sort(new FieldSortBuilder("username").order(SortOrder.DESC))
+        // 排序 = matchSearchSourceBuilder.sort(new FieldSortBuilder("username").order(SortOrder.DESC))
         matchSearchSourceBuilder.query(matchQueryBuilder);
         matchSearchSourceBuilder.from(0);
         matchSearchSourceBuilder.size(10);
@@ -457,5 +464,106 @@ public class ElasticSearchController {
         Arrays.stream(searchResponse.getHits().getHits()).forEach(searchHit -> {
             log.info("source = {}, highlighter = {}", searchHit.getSourceAsString(), searchHit.getHighlightFields());
         });
+    }
+
+
+    /**
+     * SearchScrollRequest 对大量数据进行搜索
+     * 先使用普通 SearchRequest 获取 scrollId 后使用 SearchScrollRequest 请求进行查询, 再使用上次的 scrollId 进行下次查询, 直到查询数据完成
+     * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.6/java-rest-high-search-scroll.html
+     * 中文文档 = https://www.bookstack.cn/read/elasticsearch-java-rest/java-high-level-rest-client-supported-apis-search-scroll-api.md
+     */
+    @PostMapping("/elasticsearch/scroll/request/test")
+    public void searchScrollRequestTest(String fieldName, String value) throws IOException {
+        // 普通 SearchRequest 获取 scrollId, scroll() 方法设置下一次查询的时间间隔
+        SearchRequest searchRequest = new SearchRequest(ES_INDEX, ES_INDEX_1);
+        SearchSourceBuilder searchSourceBuilder = SearchSourceBuilder.searchSource();
+        searchSourceBuilder.query(QueryBuilders.termQuery(fieldName, value));
+        searchSourceBuilder.size(1000);
+        searchSourceBuilder.timeout(new TimeValue(60, TimeUnit.MINUTES));
+        searchRequest.source(searchSourceBuilder);
+        searchRequest.scroll(TimeValue.timeValueSeconds(30));
+
+        // 获取 scrollId 并处理此次查询出来的数据
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        String scrollId = searchResponse.getScrollId();
+        log.info("scrollId = {}", scrollId);
+        log.info("当前命中的数据数量 = {}", searchResponse.getHits().totalHits);
+
+        // 使用此新的滚动标识符来搜索下一批数据
+        SearchScrollRequest scrollRequest = new SearchScrollRequest(scrollId);
+        scrollRequest.scroll(TimeValue.timeValueSeconds(30));
+        SearchResponse searchScrollResponse = client.scroll(scrollRequest, RequestOptions.DEFAULT);
+        scrollId = searchScrollResponse.getScrollId();
+        log.info("scrollId = {}", scrollId);
+        log.info("当前命中的数据数量 = {}", searchScrollResponse.getHits().totalHits);
+
+        // 重复上面的过程, 直到数据检索完成, 然后调用 ClearScrollRequest 清除滚动上下文
+        // 当滚动上下文到期时, 会自动清除, 但最建议是当滚动会话结束后尽快释放资源
+        ClearScrollRequest clearScrollRequest = new ClearScrollRequest();
+        clearScrollRequest.addScrollId(scrollId);
+        ClearScrollResponse clearScrollResponse = client.clearScroll(clearScrollRequest, RequestOptions.DEFAULT);
+        log.info("清除结果 = {}", clearScrollResponse.isSucceeded());
+    }
+
+
+    /**
+     * 批量执行多个请求
+     * 管方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.6/java-rest-high-multi-search.html
+     */
+    @PostMapping("/elasticsearch/multi/request/test")
+    public void multiSearchRequestTest(String fieldName, String value) throws IOException {
+        SearchRequest searchRequest1 = new SearchRequest(ES_INDEX);
+        SearchSourceBuilder searchSourceBuilder1 = new SearchSourceBuilder();
+        searchSourceBuilder1.query(QueryBuilders.termQuery(fieldName, value));
+        searchRequest1.source(searchSourceBuilder1);
+
+        SearchRequest searchRequest2 = new SearchRequest();
+        SearchSourceBuilder searchSourceBuilder2 = new SearchSourceBuilder();
+        searchSourceBuilder2.query(QueryBuilders.termQuery(fieldName, value));
+        searchRequest2.source(searchSourceBuilder2);
+
+        MultiSearchRequest multiSearchRequest = new MultiSearchRequest();
+        multiSearchRequest.add(searchRequest1);
+        multiSearchRequest.add(searchRequest2);
+
+        MultiSearchResponse multiSearchResponse = client.msearch(multiSearchRequest, RequestOptions.DEFAULT);
+        MultiSearchResponse.Item[] responses = multiSearchResponse.getResponses();
+        Arrays.stream(responses).forEach(response -> {
+            log.info("hitCount = {}", response.getResponse().getHits().totalHits);
+        });
+    }
+
+
+    /**
+     * 跨越多个库对字段进行检索, 对于每个请求的字段, 返回的 FieldCapabilitiesResponse 包含其类型以及是否可以搜索或是否可以聚合等信息
+     * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.6/java-rest-high-field-caps.html
+     */
+    @PostMapping("/elasticsearch/filed/capabilities/request/test")
+    public void filedCapabilitiesRequestTest() throws IOException {
+        FieldCapabilitiesRequest fieldCapabilitiesRequest = new FieldCapabilitiesRequest();
+        fieldCapabilitiesRequest.fields("username", "password");
+        fieldCapabilitiesRequest.indices(ES_INDEX, ES_INDEX_1);
+        FieldCapabilitiesResponse response = client.fieldCaps(fieldCapabilitiesRequest, RequestOptions.DEFAULT);
+        Map<String, FieldCapabilities> fieldCapabilitiesMap = response.getField("username");
+        fieldCapabilitiesMap.forEach((type, fieldCapabilities) -> {
+            log.info("type = {}, fieldCapabilities = {}", type, JSONObject.toJSONString(fieldCapabilities));
+        });
+    }
+
+
+    /**
+     * 计数统计, 获取匹配结果的数量
+     * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.6/java-rest-high-count.html
+     */
+    @PostMapping("/elasticsearch/count.request/test")
+    public void countRequestTest() throws IOException {
+        CountRequest countRequest = new CountRequest(ES_INDEX);
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders.matchQuery("username", "lpw1"));
+        countRequest.source(searchSourceBuilder);
+
+        CountResponse countResponse = client.count(countRequest, RequestOptions.DEFAULT);
+        log.info("matchCount = {}", countResponse.getCount());
     }
 }
