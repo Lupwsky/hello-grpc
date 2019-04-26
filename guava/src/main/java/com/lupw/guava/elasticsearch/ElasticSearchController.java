@@ -51,6 +51,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author v_pwlu 2019/4/23
@@ -229,10 +230,10 @@ public class ElasticSearchController {
      * 批量操作
      * Bulk API = 可组合多个 Request, 一次执行增删改产的 Request
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.6/java-rest-high-document-bulk.html
-     *
+     * <p>
      * Multi API = 在一次请求中并行的执行多个 GetRequest
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.6/java-rest-high-document-multi-get.html
-     *
+     * <p>
      * Multi Term Vectors API = 批量操作获取分词的信息和统计信息
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.0/java-rest-high-document-multi-term-vectors.html
      */
@@ -298,7 +299,7 @@ public class ElasticSearchController {
     /**
      * Update By Query API = 在不更改源的情况下更新索引库中的文档, 新的接口和官方文档有不同
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.0/java-rest-high-document-update-by-query.html
-     *
+     * <p>
      * DELETE BY QUERY API = 删除符合指定索引库中符合查询条件的文档, 新的接口和官方文档有不同
      * 官方文档 = https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.0/java-rest-high-document-delete-by-query.html
      */
@@ -402,13 +403,20 @@ public class ElasticSearchController {
     @PostMapping("/elasticsearch/search/request/test")
     public void searchRequestTest(String fieldName, String value) throws IOException {
         // Simple Query = 简单查询
-        // SearchRequest searchRequest = new SearchRequest(ES_INDEX, ES_INDEX_1);
-        // SearchSourceBuilder searchSourceBuilder = SearchSourceBuilder.searchSource();
-        // searchSourceBuilder.query(QueryBuilders.termQuery(fieldName, value));
-        // searchSourceBuilder.from(0);
-        // searchSourceBuilder.size(1);
-        // searchSourceBuilder.timeout(new TimeValue(60, TimeUnit.MINUTES));
+        SearchRequest searchRequest = new SearchRequest(ES_INDEX, ES_INDEX_1);
+        SearchSourceBuilder searchSourceBuilder = SearchSourceBuilder.searchSource();
+        searchSourceBuilder.query(QueryBuilders.termQuery(fieldName, value));
+        searchSourceBuilder.from(0);
+        searchSourceBuilder.size(1);
+        searchSourceBuilder.timeout(new TimeValue(60, TimeUnit.MINUTES));
+        searchRequest.source(searchSourceBuilder);
+
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        Arrays.stream(searchResponse.getHits().getHits()).forEach(searchHit -> {
+            log.info("source = {}, highlighter = {}", searchHit.getSourceAsString(), searchHit.getHighlightFields());
+        });
     }
+
 
     /**
      * MatchQueryBuilder
@@ -421,9 +429,7 @@ public class ElasticSearchController {
         SearchSourceBuilder matchSearchSourceBuilder = SearchSourceBuilder.searchSource();
         MatchQueryBuilder matchQueryBuilder = new MatchQueryBuilder(fieldName, value);
         // 启用 fuzziness 模糊查询, 5.0 已废弃, 不建议使用
-        // http://cwiki.apachecn.org/pages/viewpage.action?pageId=4882439
-        // https://www.felayman.com/articles/2017/12/11/1512989028146.html#b3_solo_h3_4
-        // https://iamyida.iteye.com/blog/2195066
+        // ElasticSearch 5.4 中文文档 Fuzzy Query 查询 = http://cwiki.apachecn.org/pages/viewpage.action?pageId=4882439
         // matchQueryBuilder.fuzziness(Fuzziness.AUTO);
         // 模糊查询最少公共匹配前缀, 举几个例子:
         // filedName = username, value = lpw1, prefixLength = 0, 可匹配到 username 的值是以 lpw 开头的所有数据
@@ -432,7 +438,7 @@ public class ElasticSearchController {
         // 模糊查询最大编辑距离
         // matchQueryBuilder.maxExpansions(2);
 
-        // 设定查询 limit 和排序规则
+        // 设定查询的 limit 和排序规则
         // 这里调试排序出现异常, 聚合操作异常 = https://blog.csdn.net/wwd0501/article/details/78490201
         // matchSearchSourceBuilder.sort(new FieldSortBuilder("username").order(SortOrder.DESC))
         matchSearchSourceBuilder.query(matchQueryBuilder);
@@ -440,7 +446,7 @@ public class ElasticSearchController {
         matchSearchSourceBuilder.size(10);
 
         // 设置需要高亮的字段
-        HighlightBuilder highlightBuilder = new HighlightBuilder ();
+        HighlightBuilder highlightBuilder = new HighlightBuilder();
         highlightBuilder.field("username");
         matchSearchSourceBuilder.highlighter(highlightBuilder);
 
