@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableAspectJAutoProxy
 @EnableTransactionManagement
 @EnableRetry
-//@ImportResource(locations = {"classpath:beans/GroovyBeans.xml"})
 public class GuavaApplication {
 
     public static void main(String[] args) {

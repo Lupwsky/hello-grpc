@@ -1,6 +1,10 @@
 package com.lupw.guava.datasource;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.PerformanceInterceptor;
+import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
+import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -9,12 +13,15 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -98,16 +105,48 @@ public class MultiDataSourceConfig {
 
 
     @Bean(name = "dbFactory")
-    public SqlSessionFactory getDataSourceFactory() throws Exception {
-        SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
-        sessionFactoryBean.setDataSource(getMultiRoutingDataSource());
-        sessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*/*.xml"));
-        return sessionFactoryBean.getObject();
+    public SqlSessionFactory getDataSourceFactory(PaginationInterceptor paginationInterceptor) throws Exception {
+//        SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
+//        sessionFactoryBean.setDataSource(getMultiRoutingDataSource());
+//        sessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*/*.xml"));
+//        return sessionFactoryBean.getObject();
+
+        // MyBatis 的 SqlSessionFactory 替换成 MyBatisPlus 的 SqlSessionFactory
+        MybatisSqlSessionFactoryBean sqlSessionFactoryBean =  new MybatisSqlSessionFactoryBean();
+        sqlSessionFactoryBean.setDataSource(getMultiRoutingDataSource());
+        sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*/*.xml"));
+
+        // 设置插件
+        List<Interceptor> interceptors = new ArrayList<>();
+        interceptors.add(paginationInterceptor);
+
+        sqlSessionFactoryBean.setPlugins(interceptors.toArray(new Interceptor[0]));
+        return sqlSessionFactoryBean.getObject();
     }
 
 
     @Bean(name = "multiRoutingTransaction")
     public PlatformTransactionManager platformTransactionManager() {
         return new DataSourceTransactionManager(getMultiRoutingDataSource());
+    }
+
+
+    /**
+     * Mybatis Plus 分页插件
+     */
+    @Bean
+    public PaginationInterceptor paginationInterceptor() {
+        return new PaginationInterceptor();
+    }
+
+
+    /**
+     * Mybatis Plus 性能分析工具
+     * 如果是 dev 环境, 打印出 sql, 设置 sql 拦截插件, prd 环境不要使用, 会影响性能
+     */
+    @Bean
+    @Profile({"dev", "test"})
+    public PerformanceInterceptor performanceInterceptor() {
+        return new PerformanceInterceptor();
     }
 }
