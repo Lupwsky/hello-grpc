@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * company: wesure
  * project Name: hello-grpc
@@ -28,6 +30,16 @@ public class CommonController {
     @GetMapping("/get/username")
     public String getUsername() {
         return "username-from-provider-0";
+    }
+
+    @GetMapping("/get/username/from/9020")
+    public String getUsernameFrom9020(HttpServletRequest request) {
+        String myHeader = request.getHeader("MY_HEADER");
+        log.info("myHeader = {}", myHeader);
+
+        String myParam = request.getParameter("MY_PARAM");
+        log.info("myParam = {}", myParam);
+        return "username-from-9020";
     }
 
     @GetMapping("/dc")

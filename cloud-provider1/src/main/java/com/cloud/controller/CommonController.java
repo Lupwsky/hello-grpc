@@ -16,4 +16,10 @@ public class CommonController {
     public String getUsername() {
         return "username-from-provider-1";
     }
+
+
+    @GetMapping("/get/username/from/9021")
+    public String getUsernameFrom9021() {
+        return "username-from-9021";
+    }
 }
