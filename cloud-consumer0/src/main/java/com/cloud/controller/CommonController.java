@@ -8,6 +8,7 @@ import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import reactor.ipc.netty.http.server.HttpServerRequest;
 
 
 /**
@@ -59,7 +60,7 @@ public class CommonController {
 
 
     @GetMapping("/dc")
-    public String getDc() {
+    public String getDc(HttpServerRequest request) {
 //        return apiInterface.getDc();
         return "";
     }
