@@ -17,33 +17,21 @@ import reactor.core.publisher.Mono;
 @Configuration
 public class RouteLocatorConfig {
 
-    private final RedisRateLimiter redisRateLimiter;
-
-    @Autowired
-    public RouteLocatorConfig(RedisRateLimiter redisRateLimiter) {
-        this.redisRateLimiter = redisRateLimiter;
+    @Bean
+    RedisRateLimiter redisRateLimiter() {
+        return new RedisRateLimiter(1, 2);
     }
 
     @Bean
-    public RequestRateLimiterGatewayFilterFactory requestRateLimiterGatewayFilterFactory() {
-        return new RequestRateLimiterGatewayFilterFactory(new RedisRateLimiter(1, 300),
-                (KeyResolver) exchange -> {
-                    // 使用 IP 进行限流
-                    return Mono.just(exchange.getRequest().getRemoteAddress().getHostName());
-                });
+    public MyGateWayFilter myGateWayFilter() {
+        return new MyGateWayFilter();
     }
 
     @Bean
-    public RouteLocator routeLocator(RouteLocatorBuilder builder) {
+    public RouteLocator routeLocator(RouteLocatorBuilder builder, RedisRateLimiter redisRateLimiter) {
         return builder.routes()
                 .route("cloud-provider0", r -> r.path("/get/username/from/9020")
-                        .filters(f -> f.requestRateLimiter(config -> config
-                                // defaultReplenishRate = 每秒处理请求数, defaultBurstCapacity = 令牌桶数量
-                                .setRateLimiter(redisRateLimiter)
-                                .setKeyResolver((KeyResolver) exchange -> {
-                                    // 使用 IP 进行限流
-                                    return Mono.just(exchange.getRequest().getRemoteAddress().getHostName());
-                                })))
+                        .filters(f -> f.filter(new MyGateWayFilter()))
                         .uri("http://localhost:9020"))
                 .build();
     }
