@@ -6,6 +6,7 @@
         INSERT INTO user_info(`name`, password) VALUES(#{name}, #{password})
     </insert>
 
+
     <select id="getGroovyContent" parameterType="java.lang.String" resultType="java.lang.String">
         SELECT content FROM groovy WHERE id = #{id} AND is_delete = '0'
     </select>

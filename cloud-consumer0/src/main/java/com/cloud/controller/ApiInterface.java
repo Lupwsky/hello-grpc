@@ -10,5 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 public interface ApiInterface {
 
     @GetMapping("/get/username")
+    String getDc();
+
+
+    // getDc()
+    // cloud-provider0-dev/get/username
+    @GetMapping("/get/username")
     String getUserName();
 }
