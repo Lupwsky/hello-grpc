@@ -20,7 +20,6 @@
         <module>cloud-server0</module>
         <module>cloud-provider0</module>
         <module>cloud-consumer0</module>
-        <module>cloud-provider1</module>
         <module>thread-executor</module>
         <module>socket-server</module>
         <module>socket-client</module>
