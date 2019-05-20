@@ -26,14 +26,15 @@ public class CommonController {
     private final LoadBalancerClient loadBalancerClient;
     private final RestTemplate restTemplate;
 
-//    private final ApiInterface apiInterface;
+    private final ApiInterface apiInterface;
 
     @Autowired
     public CommonController(LoadBalancerClient loadBalancerClient,
-                            RestTemplate restTemplate) {
+                            RestTemplate restTemplate,
+                            ApiInterface apiInterface) {
         this.loadBalancerClient = loadBalancerClient;
         this.restTemplate = restTemplate;
-//        this.apiInterface = apiInterface;
+        this.apiInterface = apiInterface;
     }
 
 
@@ -60,7 +61,6 @@ public class CommonController {
 
     @GetMapping("/dc")
     public String getDc() {
-//        return apiInterface.getDc();
-        return "";
+        return apiInterface.getUserName();
     }
 }
