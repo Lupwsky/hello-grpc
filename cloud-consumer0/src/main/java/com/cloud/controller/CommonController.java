@@ -40,9 +40,17 @@ public class CommonController {
 
     @GetMapping("/get/username")
     public void getUsername() {
-        ServiceInstance serviceInstance = loadBalancerClient.choose("cloud-provider1-dev");
+        ServiceInstance serviceInstance = loadBalancerClient.choose("cloud-provider0-dev");
         // String url = "http://" + serviceInstance.getHost() + ":" + serviceInstance.getPort() + "/get/username";
         // https://blog.csdn.net/november22/article/details/54612454
+
+        // 通常调用
+//        restTemplate.getForObject("http://196.989.333.444:9020/get/username", String.class);
+//        restTemplate.getForObject("http://196.989.333.445:9020/get/username", String.class);
+
+        // Euraka
+//        restTemplate.getForObject("http://服务名:9020/get/username", String.class);
+
         String url = "http://" + serviceInstance.getServiceId() + ":" + serviceInstance.getPort() + "/get/username";
         log.info("url = {}", url);
         for (int i = 0; i< 10; i++) {
@@ -54,12 +62,13 @@ public class CommonController {
 
     @GetMapping("/get/username/with/ribbon")
     public void getUsernameWithRibbon() {
-        String username = restTemplate.getForObject("http://cloud-provider1-dev/get/username", String.class);
+        //  restTemplate.getForObject("http://服务名/get/username", String.class);
+        String username = restTemplate.getForObject("http://cloud-provider0-dev/get/username", String.class);
         log.info("username = {}", username);
     }
 
 
-    @GetMapping("/dc")
+    @GetMapping("/get/username1")
     public String getDc() {
         return apiInterface.getUserName();
     }
