@@ -337,10 +337,10 @@ public class ElasticSearchController {
 
         // Clusters
         // 在集群情况下搜索时, 保存集群的信息, 总数量，成功的数量和跳过的数量
-        SearchResponse.Clusters clusters = searchResponse.getClusters();
-        log.info("集群中服务的总数量 = {}", clusters.getTotal());
-        log.info("成功的数量 = {}", clusters.getSuccessful());
-        log.info("跳过的数量 = {}", clusters.getSkipped());
+//        SearchResponse.Clusters clusters = searchResponse.getClusters();
+//        log.info("集群中服务的总数量 = {}", clusters.getTotal());
+//        log.info("成功的数量 = {}", clusters.getSuccessful());
+//        log.info("跳过的数量 = {}", clusters.getSkipped());
 
         // 执行搜索时的使用的分片信息
         log.info("搜索执行失败的分片数 = {}", searchResponse.getFailedShards());
