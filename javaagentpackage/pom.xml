@@ -34,5 +34,23 @@
 
     <build>
         <finalName>javaagentpackage</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Project-name>${project.name}</Project-name>
+                            <Project-version>${project.version}</Project-version>
+                            <Premain-Class>com.example.javaagent.InstrumentationPremainTest</Premain-Class>
+                            <Can-Redefine-Classes>true</Can-Redefine-Classes>
+                            <Can-Retransform-Classes>true</Can-Retransform-Classes>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>

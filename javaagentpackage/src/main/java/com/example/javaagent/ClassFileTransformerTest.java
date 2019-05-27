@@ -18,7 +18,9 @@ public class ClassFileTransformerTest implements ClassFileTransformer {
                             Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain,
                             byte[] classfileBuffer) throws IllegalClassFormatException {
-        log.info("className = {}", className);
+        if (className.startsWith("com/example")) {
+            log.info("className = {}", className);
+        }
         return new byte[0];
     }
 }
