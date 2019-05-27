@@ -27,6 +27,8 @@
         <module>demo</module>
         <module>zookeeper</module>
         <module>spring-study</module>
+        <module>javaagent</module>
+        <module>javaagentpackage</module>
     </modules>
 
 
