@@ -1,5 +1,8 @@
 package com.example.javaagent;
 
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.instrument.ClassFileTransformer;
@@ -20,6 +23,13 @@ public class ClassFileTransformerTest implements ClassFileTransformer {
                             byte[] classfileBuffer) throws IllegalClassFormatException {
         if (className.startsWith("com/example")) {
             log.info("className = {}", className);
+            ClassPool classPool = ClassPool.getDefault();
+            try {
+                CtClass ctClass = classPool.getCtClass(className.replace("/", "\\."));
+                log.info("ctClass = {}", ctClass);
+            } catch (NotFoundException e) {
+                log.error("exception = {}, error = {}", "NotFoundException", e);
+            }
         }
         return new byte[0];
     }
