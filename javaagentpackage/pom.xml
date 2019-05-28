@@ -44,9 +44,14 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.0</version>
+                <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
+                    <!-- get all project dependencies -->
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+
+                    <!-- MainClass in mainfest make a executable jar -->
                     <archive>
                         <manifestEntries>
                             <Project-name>${project.name}</Project-name>
@@ -57,6 +62,16 @@
                         </manifestEntries>
                     </archive>
                 </configuration>
+                <executions>
+                    <!-- bind to the packaging phase -->
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
